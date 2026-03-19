@@ -77,11 +77,13 @@ exports.create_categoria = (req, res) => {
     res.render('create_categoria');
 };
 
+
+//CREAR MARCA 
 exports.create_marca = (req, res) => {
     res.render('create_marca');
 };
 
-// crear producto
+// CREAR PRODUCTO
 exports.create_producto = (req, res) => {
     Promise.all([
         axios.get('http://localhost:3000/api/categorias'),
@@ -97,20 +99,19 @@ exports.create_producto = (req, res) => {
 };
 
 
-// crear proveedor 
+// CREAR PROVEEDOR
 exports.create_proveedor = (req, res) => {
     res.render('create_proveedor');
 };
 
 
-// crear rol 
+// CREAR ROL 
 exports.create_rol = (req, res) => {
     res.render('create_rol');
 };
 
 
-
-// VENTAS
+// VER VENTAS
 exports.ventas = (req, res) => {
     axios.get('http://localhost:3000/api/ventas')
         .then(response => {
