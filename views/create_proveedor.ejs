@@ -2,7 +2,7 @@
 
 <div class="container mt-4">
     <h2>Crear Nuevo Proveedor</h2>
-    <form action="/api/proveedores" method="POST">
+    <form action="/create-proveedor" method="POST">
         <div class="form-group">
             <label for="nombre">Nombre del proveedor</label>
             <input type="text" class="form-control" id="nombre" name="nombre" required>
@@ -20,7 +20,6 @@
             <input type="email" class="form-control" id="email" name="email">
         </div>
         <button type="submit" class="btn btn-primary">Guardar</button>
-        <a href="/admin/proveedores" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
 
