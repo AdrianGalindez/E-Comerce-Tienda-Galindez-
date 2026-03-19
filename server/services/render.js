@@ -1,5 +1,5 @@
 const axios = require('axios');
-
+// ====================CLIENTES================
 // Página principal (clientes)
 exports.homeRoutes = (req, res) => {
     axios.get('http://localhost:3000/api/productos')
@@ -54,8 +54,8 @@ exports.carrito = (req, res) => {
 };
 
 
-// ===============================ADMIN==============================
 
+// ===============================ADMIN==============================
 // FORMULARIO PARA CREAR USUARIO
 exports.add_user = (req, res) => {
     res.render('add_user');
