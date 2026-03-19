@@ -9,13 +9,6 @@ exports.homeRoutes = (req, res) => {
         .catch(err => res.send(err));
 };
 
-// Formulario para agregar usuario
-exports.add_user = (req, res) => {
-    res.render('add_user');
-};
-
-
-
 
 // categoria dinamica
 exports.categoria = (req, res) => {
@@ -54,6 +47,7 @@ exports.promociones = (req, res) => {
 
 
 
+
 // CARRITO
 exports.carrito = (req, res) => {
     res.render('carrito');
@@ -61,6 +55,12 @@ exports.carrito = (req, res) => {
 
 
 // ===============================ADMIN==============================
+
+// FORMULARIO PARA CREAR USUARIO
+exports.add_user = (req, res) => {
+    res.render('add_user');
+};
+
 
 // ACTUALIZAR USUARIO
 exports.update_user = (req, res) => {
@@ -71,12 +71,10 @@ exports.update_user = (req, res) => {
         .catch(err => res.send(err));
 };
 
-
 // ADMIN CREACIÓN
 exports.create_categoria = (req, res) => {
     res.render('create_categoria');
 };
-
 
 //CREAR MARCA 
 exports.create_marca = (req, res) => {
@@ -98,18 +96,15 @@ exports.create_producto = (req, res) => {
     .catch(err => res.send(err));
 };
 
-
 // CREAR PROVEEDOR
 exports.create_proveedor = (req, res) => {
     res.render('create_proveedor');
 };
 
-
 // CREAR ROL 
 exports.create_rol = (req, res) => {
     res.render('create_rol');
 };
-
 
 // VER VENTAS
 exports.ventas = (req, res) => {
