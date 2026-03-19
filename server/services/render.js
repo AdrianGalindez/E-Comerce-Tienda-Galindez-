@@ -18,7 +18,7 @@ exports.add_user = (req, res) => {
 // CATEGORÍA (GENÉRICA)
 // ======================
 
-// 👉 Eliminamos bebidas, papeleria, aseo, etc (duplicadas)
+// categorias 
 exports.categoria = (req, res) => {
     axios.get('http://localhost:3000/api/productos')
         .then(response => {
@@ -87,6 +87,7 @@ exports.create_marca = (req, res) => {
     res.render('create_marca');
 };
 
+// no entiendo esta linea
 exports.create_producto = (req, res) => {
     Promise.all([
         axios.get('http://localhost:3000/api/categorias'),
