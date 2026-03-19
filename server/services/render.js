@@ -2,7 +2,7 @@ const axios = require('axios');
 
 // Página principal (usuarios)
 exports.homeRoutes = (req, res) => {
-    axios.get('http://localhost:3000/api/users')
+    axios.get('http://localhost:3000/api/productos')
         .then(response => {
             res.render('index', { users: response.data });
         })
