@@ -43,4 +43,4 @@ var schema = new mongoose.Schema({
 
 const Productodb = mongoose.model('productodb', schema);
 
-module.exports = Productodb;
+module.exports = Productdb;
