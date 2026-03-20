@@ -1,4 +1,4 @@
-var Proveedordb = require('../model/proveedor');
+var Providerdb = require('../model/proveedor');
 
 
 // =======================
@@ -10,13 +10,13 @@ exports.create = (req,res)=>{
         return res.status(400).send({ message : "Content can not be empty!"});
     }
 
-    const proveedor = new Proveedordb({
+    const provider = new Providerdb({
         nombre : req.body.nombre,
         telefono : req.body.telefono,
         direccion : req.body.direccion
     });
 
-    proveedor
+    provider
         .save()
         .then(data => {
             res.send(data);
@@ -38,7 +38,7 @@ exports.find = (req, res)=>{
     if(req.query.id){
         const id = req.query.id;
 
-        Proveedordb.findById(id)
+        Providerdb.findById(id)
             .then(data =>{
                 if(!data){
                     res.status(404).send({ message : "Proveedor no encontrado con id "+ id})
@@ -51,9 +51,9 @@ exports.find = (req, res)=>{
             })
 
     }else{
-        Proveedordb.find()
-            .then(proveedor => {
-                res.send(proveedor)
+        Providerdb.find()
+            .then(provider => {
+                res.send(provider)
             })
             .catch(err => {
                 res.status(500).send({ message : err.message || "Error retrieving proveedores" })
@@ -75,7 +75,7 @@ exports.update = (req, res)=>{
 
     const id = req.params.id;
 
-    Proveedordb.findByIdAndUpdate(id, req.body, { useFindAndModify: false})
+    Providerdb.findByIdAndUpdate(id, req.body, { useFindAndModify: false})
         .then(data => {
             if(!data){
                 res.status(404).send({ message : `Cannot Update proveedor with ${id}. Maybe not found!`})
@@ -96,7 +96,7 @@ exports.update = (req, res)=>{
 exports.delete = (req, res)=>{
     const id = req.params.id;
 
-    Proveedordb.findByIdAndDelete(id)
+    Providerdb.findByIdAndDelete(id)
         .then(data => {
             if(!data){
                 res.status(404).send({ message : `Cannot Delete proveedor with id ${id}. Maybe id is wrong`})
