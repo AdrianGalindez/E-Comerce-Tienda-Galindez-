@@ -1,11 +1,11 @@
 var Categorydb = require('../model/categoria');
 
 exports.create = (req,res)=>{
-    const Categorydb = new Categoriadb({
+    const Category = new Categoriadb({
         nombre : req.body.nombre
     });
 
-    Categorydb.save()
+    Category.save()
         .then(data => res.send(data))
         .catch(err => res.status(500).send(err))
 }
