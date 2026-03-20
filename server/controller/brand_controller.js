@@ -1,4 +1,4 @@
-var Marcadb = require('../model/marca');
+var Brand_db = require('../model/marca');
 
 exports.create = (req,res)=>{
     const marca = new Marcadb({
