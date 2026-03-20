@@ -1,0 +1,53 @@
+<!-- include header -->
+<%- include('include/_headerAdmin') %>
+<!-- /include header -->
+
+
+
+<main>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Teléfono</th>
+        <th scope="col">Dirección</th>
+        <th scope="col">Editar</th>
+        <th scope="col">Eliminar</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% providers.forEach(function(provider) { %>
+      <tr>
+        <th scope="row"><%= provider._id %></th>
+        <td><%= provider.nombre %></td>
+        <td><%= provider.telefono %></td>
+        <td><%= provider.direccion %></td>
+
+        <td>
+          <a href="/update-provider?id=<%= provider._id %>" class="btn btn-success">Editar</a>
+        </td>
+
+        <td>
+          <a href="/api/providers/<%= provider._id %>" class="btn btn-danger delete">Eliminar</a>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+</main>
+
+<!-- include footer -->
+<%- include('include/_footerAdmin') %>
+<!-- /include footer -->
+
+
+
+
+
+
+<!-- include footer -->
+<%- include('include/_footerAdmin') %>
+<!-- /include footer -->

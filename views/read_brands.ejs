@@ -1,0 +1,41 @@
+<!-- include header -->
+<%- include('include/_headerAdmin') %>
+<!-- /include header -->
+
+
+<main>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Editar</th>
+        <th scope="col">Eliminar</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% brands.forEach(function(brand) { %>
+      <tr>
+        <th scope="row"><%= brand._id %></th>
+        <td><%= brand.nombre %></td>
+
+        <td>
+          <a href="/update-brand?id=<%= brand._id %>" class="btn btn-success">Editar</a>
+        </td>
+
+        <td>
+          <a href="/api/brands/<%= brand._id %>" class="btn btn-danger delete">Eliminar</a>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+</main>
+
+
+
+<!-- include footer -->
+<%- include('include/_footerAdmin') %>
+<!-- /include footer -->

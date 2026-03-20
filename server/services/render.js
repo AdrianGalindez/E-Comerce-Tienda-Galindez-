@@ -1,6 +1,9 @@
 const axios = require('axios');
-// ====================CLIENTES================
-// Página principal (clientes)
+
+
+// ==================== CLIENTES =========================
+
+// Página principal
 exports.homeRoutes = (req, res) => {
     axios.get('http://localhost:3000/api/productos')
         .then(response => {
@@ -9,8 +12,7 @@ exports.homeRoutes = (req, res) => {
         .catch(err => res.send(err));
 };
 
-
-// categoria dinamica
+// Categoría dinámica
 exports.category = (req, res) => {
     axios.get('http://localhost:3000/api/productos')
         .then(response => {
@@ -22,9 +24,22 @@ exports.category = (req, res) => {
         .catch(err => res.send(err));
 };
 
+// Promociones
+exports.promotions = (req, res) => {
+    axios.get('http://localhost:3000/api/productos')
+        .then(response => {
+            const productos = response.data.filter(p => p.stock > 20);
+            res.render('promotions', { productos });
+        })
+        .catch(err => res.send(err));
+};
 
+// Carrito
+exports.car = (req, res) => {
+    res.render('car');
+};
 
-// MARCAS
+// Marcas (cliente)
 exports.brands = (req, res) => {
     axios.get('http://localhost:3000/api/marcas')
         .then(response => {
@@ -35,12 +50,60 @@ exports.brands = (req, res) => {
 
 
 
-// PROMOCIONES
-exports.promotions = (req, res) => {
+// ==================== PRODUCTOS ========================
+
+exports.create_product = (req, res) => {
+    axios.post('http://localhost:3000/api/productos', req.body)
+        .then(response => {
+            res.redirect('/create_producto');
+        })
+        .catch(err => res.send(err));
+};
+
+exports.read_products = (req, res) => {
     axios.get('http://localhost:3000/api/productos')
         .then(response => {
-            const productos = response.data.filter(p => p.stock > 20);
-            res.render('promotions', { productos });
+            res.render('read_products', { productos: response.data });
+        })
+        .catch(err => res.send(err));
+};
+
+exports.update_products = (req, res) => {
+    axios.get('http://localhost:3000/api/productos', { params: { id: req.query.id }})
+        .then(response => {
+            res.render('update_products', { producto: response.data });
+        })
+        .catch(err => res.send(err));
+};
+
+exports.delete_product = (req, res) => {
+    axios.delete(`http://localhost:3000/api/productos/${req.params.id}`)
+        .then(response => {
+            res.redirect('read_products');
+        })
+        .catch(err => res.send(err));
+};
+
+
+
+// ==================== CATEGORÍAS =======================
+
+exports.create_category = (req, res) => {
+    res.render('create_categoria');
+};
+
+exports.read_categories = (req, res) => {
+    axios.get('http://localhost:3000/api/categorias')
+        .then(response => {
+            res.render('read_categories', { categories: response.data });
+        })
+        .catch(err => res.send(err));
+};
+
+exports.update_category = (req, res) => {
+    axios.get('http://localhost:3000/api/categorias', { params: { id: req.query.id }})
+        .then(response => {
+            res.render('update_categoria', { category: response.data });
         })
         .catch(err => res.send(err));
 };
@@ -48,22 +111,69 @@ exports.promotions = (req, res) => {
 
 
 
-// CARRITO
-exports.car = (req, res) => {
-    res.render('car');
+// ==================== MARCAS ===========================
+
+exports.read_brands = (req, res) => {
+    axios.get('http://localhost:3000/api/marcas')
+        .then(response => {
+            res.render('read_brands', { brands: response.data });
+        })
+        .catch(err => res.send(err));
+};
+
+
+exports.update_brand = (req, res) => {
+    axios.get('http://localhost:3000/api/marcas', { params: { id: req.query.id }})
+        .then(response => {
+            res.render('update_brands', { brand: response.data });
+        })
+        .catch(err => res.send(err));
+};
+
+exports.create_brand = (req, res) => {
+    res.render('create_brands');
 };
 
 
 
-// ===============================ADMIN==============================
+// ==================== PROVEEDORES ======================
 
-// CREAR USUARIO
+exports.read_providers = (req, res) => {
+    axios.get('http://localhost:3000/api/proveedores')
+        .then(response => {
+            res.render('read_providers', { providers: response.data });
+        })
+        .catch(err => res.send(err));
+};
+
+exports.update_provider = (req, res) => {
+    axios.get('http://localhost:3000/api/proveedores', { params: { id: req.query.id }})
+        .then(response => {
+            res.render('update_provider', { provider: response.data });
+        })
+        .catch(err => res.send(err));
+};
+
+exports.create_provider = (req, res) => {
+    res.render('create_provider');
+};
+
+
+
+// ==================== USUARIOS =========================
+
 exports.add_user = (req, res) => {
-  res.render('add_user'); 
+    res.render('add_user'); 
 };
 
+exports.read_users = (req, res) => {
+    axios.get('http://localhost:3000/api/users')
+        .then(response => {
+            res.render('read_users', { users: response.data });
+        })
+        .catch(err => res.send(err));
+};
 
-// ACTUALIZAR USUARIO
 exports.update_user = (req, res) => {
     axios.get('http://localhost:3000/api/users', { params: { id: req.query.id } })
         .then(userdata => {
@@ -72,49 +182,68 @@ exports.update_user = (req, res) => {
         .catch(err => res.send(err));
 };
 
-// ADMIN CREACIÓN
-exports.create_category = (req, res) => {
-    res.render('create_categoria');
+
+
+// ==================== ROLES ============================
+
+exports.read_roles = (req, res) => {
+    axios.get('http://localhost:3000/api/roles')
+        .then(response => {
+            res.render('read_rols', { roles: response.data });
+        })
+        .catch(err => res.send(err));
 };
 
-//CREAR MARCA 
-exports.create_brand = (req, res) => {
-    res.render('create_marca');
+exports.update_rol = (req, res) => {
+    axios.get('http://localhost:3000/api/roles', { params: { id: req.query.id }})
+        .then(response => {
+            res.render('update_rol', { rol: response.data });
+        })
+        .catch(err => res.send(err));
 };
 
-// CREAR PRODUCTO
-exports.create_product = (req, res) => {
-    Promise.all([
-        axios.get('http://localhost:3000/api/categorias'),
-        axios.get('http://localhost:3000/api/marcas')
-    ])
-    .then(([categoriasRes, marcasRes]) => {
-        res.render('create_producto', {
-            categorias: categoriasRes.data,
-            marcas: marcasRes.data
-        });
-    })
-    .catch(err => res.send(err));
-};
-
-// CREAR PROVEEDOR
-exports.create_provider = (req, res) => {
-    res.render('create_proveedor');
-};
-
-// CREAR ROL 
 exports.create_rol = (req, res) => {
     res.render('create_rol');
 };
 
-// VER VENTAS
+
+
+// ==================== VENTAS ===========================
+
 exports.sales = (req, res) => {
     axios.get('http://localhost:3000/api/ventas')
         .then(response => {
-            res.render('sales', { ventas: response.data });
+            res.render('read_sales', { sales: response.data });
         })
-        .catch(err => {
-            console.error("Error al obtener ventas:", err);
-            res.status(500).send("Error al cargar las ventas");
-        });
+        .catch(err => res.send(err));
 };
+
+exports.update_sale = (req, res) => {
+    axios.get('http://localhost:3000/api/ventas', { params: { id: req.query.id }})
+        .then(response => {
+            res.render('update_sale', { sale: response.data });
+        })
+        .catch(err => res.send(err));
+};
+
+
+
+// ================= DETALLE VENTAS ======================
+
+exports.read_sale_details = (req, res) => {
+    axios.get('http://localhost:3000/api/detalle-ventas')
+        .then(response => {
+            res.render('read_detailsSales', { saleDetails: response.data });
+        })
+        .catch(err => res.send(err));
+};
+
+exports.update_sale_detail = (req, res) => {
+    axios.get('http://localhost:3000/api/detalle-ventas', { params: { id: req.query.id }})
+        .then(response => {
+            res.render('update_saleDetail', { detail: response.data });
+        })
+        .catch(err => res.send(err));
+};
+
+

@@ -3,6 +3,7 @@ const route = express.Router()
 
 const services = require('../services/render');
 console.log(services);
+
 // controladores de la aplicación
 const userController = require('../controller/user_controller');
 const productController = require('../controller/product_controller');
@@ -14,7 +15,6 @@ const rolController = require('../controller/rol_controller');
 const detailSalesController = require('../controller/detailSales_controller');
 
 // rutas del cliente
-
 //=======================API USERS====================
 route.post('/api/users', userController.create);
 route.get('/api/users', userController.find);
@@ -62,11 +62,14 @@ route.get('/api/roles', rolController.find);
 route.put('/api/roles/:id', rolController.update);
 route.delete('/api/roles/:id', rolController.delete);
 
+
+
 // ======================== API DETALLE VENTAS =====================
 route.post('/api/detalle-ventas', detailSalesController.create);
 route.get('/api/detalle-ventas', detailSalesController.find);
 route.put('/api/detalle-ventas/:id', detailSalesController.update);
 route.delete('/api/detalle-ventas/:id', detailSalesController.delete);
+
 
 
 // rutas para consumir las apis desde el cliente
@@ -81,20 +84,58 @@ route.get('/categoria/:nombre', services.category); // ruta de catergorias dinam
 //========================Rutas del admin=================
 route.get('/create-categoria', services.create_category);
 route.post('/create-categoria', services.create_category);
+route.get('/read-categoria', services.read_categories);
+route.post('/read-categoria', services.read_categories);
+route.get('/update-categoria', services.read_categories);
+route.post('/update-categoria', services.read_categories);
 
+
+route.post('/create-marca', services.create_brand);
 route.get('/create-marca', services.create_brand);
+route.post('/read-marca', services.read_brands);
+route.get('/read-marca', services.read_brands);
+route.post('/update-marca', services.read_brands);
+route.get('/update-marca', services.read_brands);
+
+
+route.post('/create-producto', services.create_product);
 route.get('/create-producto', services.create_product);
+route.get('/read-producto', services.read_products);
+route.post('/read-producto', services.read_products);
+route.get('/update-producto', services.read_products);
+route.post('/update-producto', services.read_products);
+
+
+route.post('/create-proveedor', services.create_provider);
 route.get('/create-proveedor', services.create_provider);
+route.get('/read-proveedor', services.read_providers);
+route.post('/read-proveedor', services.create_provider);
+route.get('/update-proveedor', services.read_providers);
+route.post('/update-proveedor', services.create_provider);
+
+
+route.post('/create-rol', services.create_rol);
 route.get('/create-rol', services.create_rol);
-route.get('/admin/ventas', services.sales);
+route.post('/read-rol', services.read_roles);
+route.get('/read-rol', services.read_roles);
+route.post('/update-rol', services.read_roles);
+route.get('/update-rol', services.read_roles);
+
+
+route.post('/create-ventas', services.sales);
+route.get('/create-ventas', services.sales);
+route.post('/read-ventas', services.sales);
+route.get('/read-ventas', services.sales);
+route.post('/update-ventas', services.sales);
+route.get('/update-ventas', services.sales);
+
+
+route.post('/add-user', services.add_user);
 route.get('/add-user', services.add_user);
+route.post('/read-user', services.read_users);
+route.get('/read-user', services.read_users);
+route.post('/update-user', services.update_user);
 route.get('/update-user', services.update_user);
-
-
-
-
-
-
 
 
 module.exports = route;

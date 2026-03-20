@@ -1,0 +1,74 @@
+<!-- include header -->
+<%- include('include/_headerAdmin') %>
+<!-- /include header -->
+
+
+<main>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Descripción</th>
+        <th scope="col">Foto</th>
+        <th scope="col">Marca</th>
+        <th scope="col">Categoría</th>
+        <th scope="col">Proveedor</th>
+        <th scope="col">Precio</th>
+        <th scope="col">Stock</th>
+        <th scope="col">Fecha Ingreso</th>
+        <th scope="col">Editar</th>
+        <th scope="col">Eliminar</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% productos.forEach(function(product) { %>
+      <tr>
+        <th scope="row"><%= product._id %></th>
+        <td><%= product.nombre %></td>
+        <td><%= product.descripcion %></td>
+
+        <td>
+          <% if(product.foto){ %>
+            <img src="<%= product.foto %>" alt="foto" width="50">
+          <% } else { %>
+            Sin imagen
+          <% } %>
+        </td>
+
+        <td>
+          <%= product.marca ? product.marca.nombre : 'N/A' %>
+        </td>
+
+        <td>
+          <%= product.categoria ? product.categoria.nombre : 'N/A' %>
+        </td>
+
+        <td>
+          <%= product.proveedor ? product.proveedor.nombre : 'N/A' %>
+        </td>
+
+        <td>$ <%= product.precio %></td>
+        <td><%= product.stock %></td>
+        <td><%= product.fechaIngreso.toLocaleDateString() %></td>
+
+        <td>
+          <a href="/update-product?id=<%= product._id %>" class="btn btn-success">Editar</a>
+        </td>
+
+        <td>
+          <a href="/api/products/<%= product._id %>" class="btn btn-danger delete">Eliminar</a>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+</main>
+
+
+
+<!-- include footer -->
+<%- include('include/_footerAdmin') %>
+<!-- /include footer -->

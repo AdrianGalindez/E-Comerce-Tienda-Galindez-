@@ -6,7 +6,9 @@ exports.create = (req,res)=>{
     });
 
     Brand_db.save()
-        .then(data => res.send(data))
+        .then(data => {
+            res.redirect('/create-marca');
+        })
         .catch(err => res.status(500).send(err))
 }
 
@@ -18,7 +20,7 @@ exports.find = (req,res)=>{
 
 exports.update = (req,res)=>{
     Brand_db.findByIdAndUpdate(req.params.id, req.body)
-        .then(data => res.send(data))
+        .then(data => res.redirect('/create-marcas'))
         .catch(err => res.status(500).send(err))
 }
 
