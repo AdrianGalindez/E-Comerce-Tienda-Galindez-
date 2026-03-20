@@ -1,0 +1,31 @@
+var Categorydb = require('../model/categories');
+
+exports.create = (req,res)=>{
+    const Category = new Categoriadb({
+        nombre : req.body.nombre
+    });
+
+    Category.save()
+        .then(data => {
+            res.redirect('/create-categoria'); 
+        })
+        .catch(err => res.status(500).send(err))
+}
+
+exports.find = (req,res)=>{
+    Categorydb.find()
+        .then(data => res.send(data))
+        .catch(err => res.status(500).send(err))
+}
+
+exports.update = (req,res)=>{
+    Categorydb.findByIdAndUpdate(req.params.id, req.body)
+        .then(data => res.send(data))
+        .catch(err => res.status(500).send(err))
+}
+
+exports.delete = (req,res)=>{
+    Categorydb.findByIdAndDelete(req.params.id)
+        .then(data => res.send({ message : "Categoria eliminada"}))
+        .catch(err => res.status(500).send(err))
+}
