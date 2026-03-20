@@ -25,7 +25,7 @@ exports.category = (req, res) => {
 
 
 // MARCAS
-exports.brand = (req, res) => {
+exports.brands = (req, res) => {
     axios.get('http://localhost:3000/api/marcas')
         .then(response => {
             res.render('marcas', { marcas: response.data });
@@ -36,7 +36,7 @@ exports.brand = (req, res) => {
 
 
 // PROMOCIONES
-exports.promotion = (req, res) => {
+exports.promotions = (req, res) => {
     axios.get('http://localhost:3000/api/productos')
         .then(response => {
             const productos = response.data.filter(p => p.stock > 20);
