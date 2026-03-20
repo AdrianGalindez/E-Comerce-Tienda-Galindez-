@@ -26,4 +26,4 @@ var schema = new mongoose.Schema({
 
 const DetalleVentadb = mongoose.model('detalleventadb', schema);
 
-module.exports = DetalleVentadb;
+module.exports = SaleDetaildb;
