@@ -10,6 +10,8 @@ const categoriaController = require('../controller/categoria_controller');
 const marcaController = require('../controller/marca_controller');
 const ventaController = require('../controller/venta_controller');
 const proveedorController = require('../controller/proveedor_controller');
+const rolController = require('../controller/rol_controller');
+const detailSalesController = require('../controller/detailSales_controller');
 
 // rutas del cliente
 route.get('/', services.homeRoutes);
@@ -59,6 +61,19 @@ route.delete('/api/proveedores/:id', proveedorController.delete);
 route.post('/api/ventas', ventaController.create);
 route.get('/api/ventas', ventaController.find);
 route.delete('/api/ventas/:id', ventaController.delete);
+
+
+//========================API ROLES=================
+route.post('/api/roles', rolController.create);
+route.get('/api/roles', rolController.find);
+route.put('/api/roles/:id', rolController.update);
+route.delete('/api/roles/:id', rolController.delete);
+
+// ======================== API DETALLE VENTAS =====================
+route.post('/api/detalle-ventas', detailSalesController.create);
+route.get('/api/detalle-ventas', detailSalesController.find);
+route.put('/api/detalle-ventas/:id', detailSalesController.update);
+route.delete('/api/detalle-ventas/:id', detailSalesController.delete);
 
 
 //========================Rutas del admin=================
