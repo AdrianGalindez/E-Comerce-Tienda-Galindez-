@@ -15,10 +15,10 @@ const detailSalesController = require('../controller/detailSales_controller');
 
 // rutas del cliente
 route.get('/', services.homeRoutes);
-route.get('/promociones', services.promociones);
-route.get('/marcas', services.marcas);
-route.get('/carrito', services.carrito);
-route.get('/categoria/:nombre', services.categoria); // ruta de catergorias dinamica 
+route.get('/promociones', services.promotion);
+route.get('/marcas', services.brands);
+route.get('/carrito', services.car);
+route.get('/categoria/:nombre', services.category); // ruta de catergorias dinamica 
 
 
 
@@ -77,12 +77,12 @@ route.delete('/api/detalle-ventas/:id', detailSalesController.delete);
 
 
 //========================Rutas del admin=================
-route.get('/create-categoria', services.create_categoria);
-route.get('/create-marca', services.create_marca);
-route.get('/create-producto', services.create_producto);
-route.get('/create-proveedor', services.create_proveedor);
+route.get('/create-categoria', services.create_category);
+route.get('/create-marca', services.create_brand);
+route.get('/create-producto', services.create_product);
+route.get('/create-proveedor', services.create_provider);
 route.get('/create-rol', services.create_rol);
-route.get('/admin/ventas', services.ventas);
+route.get('/admin/ventas', services.sales);
 route.get('/add-user', services.add_user);
 route.get('/update-user', services.update_user);
 
