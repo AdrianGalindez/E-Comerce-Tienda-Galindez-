@@ -15,4 +15,4 @@ var schema = new mongoose.Schema({
 
 const Proveedordb = mongoose.model('proveedordb', schema);
 
-module.exports = Proveedordb;
+module.exports = Providerdb;
