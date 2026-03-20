@@ -2,10 +2,10 @@ var Productdb = require('../model/product');
 
 // create
 exports.create = (req,res)=>{
-    if(!req.body){
-        return res.status(400).send({ message : "Content empty"});
+    if(!req.body.nombre || !req.body.precio || !req.body.stock){
+        return res.status(400).send({ message: "Faltan datos obligatorios" });
     }
-
+    console.log("BODY:", req.body);
     const product = new Productdb({
         nombre : req.body.nombre,
         marca : req.body.marca,

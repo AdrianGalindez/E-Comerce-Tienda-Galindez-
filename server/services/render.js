@@ -12,6 +12,7 @@ exports.homeRoutes = (req, res) => {
         .catch(err => res.send(err));
 };
 
+
 // Categoría dinámica
 exports.category = (req, res) => {
     axios.get('http://localhost:3000/api/productos')
@@ -19,10 +20,11 @@ exports.category = (req, res) => {
             const productos = response.data.filter(p => 
                 p.categoria?.nombre === req.params.nombre
             );
-            res.render('categories', { productos });
+            res.render('/create-categoria', { productos });
         })
         .catch(err => res.send(err));
 };
+
 
 // Promociones
 exports.promotions = (req, res) => {
@@ -34,10 +36,12 @@ exports.promotions = (req, res) => {
         .catch(err => res.send(err));
 };
 
+
 // Carrito
 exports.car = (req, res) => {
     res.render('car');
 };
+
 
 // Marcas (cliente)
 exports.brands = (req, res) => {
@@ -51,14 +55,34 @@ exports.brands = (req, res) => {
 
 
 // ==================== PRODUCTOS ========================
-
 exports.create_product = (req, res) => {
     axios.post('http://localhost:3000/api/productos', req.body)
         .then(response => {
-            res.redirect('/create_producto');
+            console.log(req.body);
+            res.redirect('/create-producto');
         })
         .catch(err => res.send(err));
 };
+
+
+// Mostrar formulario de creación de producto
+exports.create_product_form = (req, res) => {
+    // Traemos marcas, categorías y proveedores para los selects del formulario
+    Promise.all([
+        axios.get('http://localhost:3000/api/marcas'),
+        axios.get('http://localhost:3000/api/categorias'),
+        axios.get('http://localhost:3000/api/proveedores')
+    ])
+    .then(([marcasRes, categoriasRes, proveedoresRes]) => {
+        res.render('create_producto', { 
+            marcas: marcasRes.data,
+            categorias: categoriasRes.data,
+            proveedores: proveedoresRes.data
+        });
+    })
+    .catch(err => res.send(err));
+};
+
 
 exports.read_products = (req, res) => {
     axios.get('http://localhost:3000/api/productos')
@@ -68,6 +92,7 @@ exports.read_products = (req, res) => {
         .catch(err => res.send(err));
 };
 
+
 exports.update_products = (req, res) => {
     axios.get('http://localhost:3000/api/productos', { params: { id: req.query.id }})
         .then(response => {
@@ -75,6 +100,7 @@ exports.update_products = (req, res) => {
         })
         .catch(err => res.send(err));
 };
+
 
 exports.delete_product = (req, res) => {
     axios.delete(`http://localhost:3000/api/productos/${req.params.id}`)
@@ -87,10 +113,15 @@ exports.delete_product = (req, res) => {
 
 
 // ==================== CATEGORÍAS =======================
+exports.create_category_form = (req, res) => {
+    res.render('create_categoria'); // formulario simple, solo nombre
+};
+
 
 exports.create_category = (req, res) => {
     res.render('create_categoria');
 };
+
 
 exports.read_categories = (req, res) => {
     axios.get('http://localhost:3000/api/categorias')
@@ -99,6 +130,7 @@ exports.read_categories = (req, res) => {
         })
         .catch(err => res.send(err));
 };
+
 
 exports.update_category = (req, res) => {
     axios.get('http://localhost:3000/api/categorias', { params: { id: req.query.id }})
@@ -109,9 +141,12 @@ exports.update_category = (req, res) => {
 };
 
 
-
-
 // ==================== MARCAS ===========================
+
+exports.create_brand_form = (req, res) => {
+    res.render('create_marca'); // formulario simple, solo nombre
+};
+
 
 exports.read_brands = (req, res) => {
     axios.get('http://localhost:3000/api/marcas')
@@ -130,13 +165,18 @@ exports.update_brand = (req, res) => {
         .catch(err => res.send(err));
 };
 
+
 exports.create_brand = (req, res) => {
-    res.render('create_brands');
+    res.render('create_marca');
 };
 
 
-
 // ==================== PROVEEDORES ======================
+
+exports.create_provider_form = (req, res) => {
+    res.render('create_proveedor'); // formulario simple: nombre, telefono, direccion
+};
+
 
 exports.read_providers = (req, res) => {
     axios.get('http://localhost:3000/api/proveedores')
@@ -146,6 +186,7 @@ exports.read_providers = (req, res) => {
         .catch(err => res.send(err));
 };
 
+
 exports.update_provider = (req, res) => {
     axios.get('http://localhost:3000/api/proveedores', { params: { id: req.query.id }})
         .then(response => {
@@ -154,17 +195,27 @@ exports.update_provider = (req, res) => {
         .catch(err => res.send(err));
 };
 
+
 exports.create_provider = (req, res) => {
-    res.render('create_provider');
+    res.render('create_proveedor');
 };
 
 
-
 // ==================== USUARIOS =========================
+exports.create_user_form = (req, res) => {
+    // opcional: si tienes roles, puedes traerlos para un select
+    axios.get('http://localhost:3000/api/roles')
+        .then(response => {
+            res.render('add_user', { roles: response.data });
+        })
+        .catch(err => res.send(err));
+};
+
 
 exports.add_user = (req, res) => {
     res.render('add_user'); 
 };
+
 
 exports.read_users = (req, res) => {
     axios.get('http://localhost:3000/api/users')
@@ -173,6 +224,7 @@ exports.read_users = (req, res) => {
         })
         .catch(err => res.send(err));
 };
+
 
 exports.update_user = (req, res) => {
     axios.get('http://localhost:3000/api/users', { params: { id: req.query.id } })
@@ -185,6 +237,10 @@ exports.update_user = (req, res) => {
 
 
 // ==================== ROLES ============================
+exports.create_rol_form = (req, res) => {
+    res.render('create_rol'); // formulario simple: nombre del rol
+};
+
 
 exports.read_roles = (req, res) => {
     axios.get('http://localhost:3000/api/roles')
@@ -194,6 +250,7 @@ exports.read_roles = (req, res) => {
         .catch(err => res.send(err));
 };
 
+
 exports.update_rol = (req, res) => {
     axios.get('http://localhost:3000/api/roles', { params: { id: req.query.id }})
         .then(response => {
@@ -202,13 +259,28 @@ exports.update_rol = (req, res) => {
         .catch(err => res.send(err));
 };
 
+
 exports.create_rol = (req, res) => {
     res.render('create_rol');
 };
 
 
-
 // ==================== VENTAS ===========================
+exports.create_sale_form = (req, res) => {
+    // Traemos productos y usuarios para el formulario
+    Promise.all([
+        axios.get('http://localhost:3000/api/productos'),
+        axios.get('http://localhost:3000/api/users')
+    ])
+    .then(([productosRes, usersRes]) => {
+        res.render('create-ventas-form', { 
+            productos: productosRes.data, 
+            users: usersRes.data 
+        });
+    })
+    .catch(err => res.send(err));
+};
+
 
 exports.sales = (req, res) => {
     axios.get('http://localhost:3000/api/ventas')
@@ -217,6 +289,7 @@ exports.sales = (req, res) => {
         })
         .catch(err => res.send(err));
 };
+
 
 exports.update_sale = (req, res) => {
     axios.get('http://localhost:3000/api/ventas', { params: { id: req.query.id }})
@@ -227,8 +300,22 @@ exports.update_sale = (req, res) => {
 };
 
 
-
 // ================= DETALLE VENTAS ======================
+exports.create_sale_detail_form = (req, res) => {
+    // Traemos ventas y productos para el detalle
+    Promise.all([
+        axios.get('http://localhost:3000/api/ventas'),
+        axios.get('http://localhost:3000/api/productos')
+    ])
+    .then(([ventasRes, productosRes]) => {
+        res.render('create_detalleVenta', { 
+            ventas: ventasRes.data, 
+            productos: productosRes.data 
+        });
+    })
+    .catch(err => res.send(err));
+};
+
 
 exports.read_sale_details = (req, res) => {
     axios.get('http://localhost:3000/api/detalle-ventas')
@@ -237,6 +324,7 @@ exports.read_sale_details = (req, res) => {
         })
         .catch(err => res.send(err));
 };
+
 
 exports.update_sale_detail = (req, res) => {
     axios.get('http://localhost:3000/api/detalle-ventas', { params: { id: req.query.id }})

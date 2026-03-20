@@ -2,11 +2,14 @@ const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const bodyparser = require("body-parser");
+
 const path = require('path');
 
 const connectDB = require('./server/database/connection');
 
 const app = express();
+app.use(express.json());
+app.use(bodyparser.urlencoded({ extended : true}))
 console.log("TODAS LAS ENV:", process.env)
 console.log("MONGO:", process.env.MONGO_URI)
 console.log("DB:", process.env.DB_URI)
