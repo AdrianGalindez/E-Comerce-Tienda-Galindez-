@@ -4,26 +4,29 @@
 <!-- /include header -->
 
 
-    <!-- Main Site -->
-    <main id="site-main">
-        <div class="container">
-            <h1>Marcas</h1>
+<main id="site-main">
+    <div class="container mt-4">
+        <h1 class="mb-3">Marcas</h1>
+        <p class="mb-4">
+            Descubre las mejores marcas de productos de aseo para tu hogar.
+        </p>
+        <!-- GRID -->
+        <div class="brands-grid">
+            <% brands.forEach(b => { %>
+                <div class="card brand-card">
+                    <!-- Puedes luego poner logo -->
+                    <img src="/img/default-brand.png" class="card-img-top" alt="marca">
+                    <div class="card-body text-center">
+                        <h5 class="card-title"><%= b.nombre %></h5>
+                        <a href="/brand/<%= b._id %>" class="btn btn-outline-primary w-100 mt-2">
+                            Ver productos
+                        </a>
+                    </div>
+                </div>
+            <% }) %>
         </div>
-        <p>Descubre las mejores marcas de productos de aseo para tu hogar. Desde detergentes hasta productos de limpieza, tenemos todo lo que necesitas para mantener tu casa impecable.</p>
-        <% marcas.forEach(m => { %>
-            <div class="product">
-                <h3><%= m.nombre %></h3>
-            </div>
-        <% }) %>
-        <div class="card" style="width: 18rem;">
-          <img src="..." class="card-img-top" alt="...">
-          <div class="card-body">
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-          </div>
-        </div>
-        
-    </main>
-    <!-- /Main Site -->
+    </div>
+</main>
 
 
 <!-- include footer -->

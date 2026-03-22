@@ -72,28 +72,26 @@
             </div>
     </div>
 
-    
- <% productos.forEach(p=>{  %>
     <div class="container-cards">
-            <div class="card" style="width: 18rem;">
+        <% productos.forEach(p => { %>
+            <div class="card">
                 <img src="/img/arroz.jpg" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title"><% p.nombre %> </h5>
-                    <p class="card-text"><% p.descripcion %> </p>
+                    <h5 class="card-title"><%= p.nombre %></h5>
+                    <p class="card-text"><%= p.descripcion %></p>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item"> <% p.precio %> Libra</li>
+                    <li class="list-group-item">$ <%= p.precio %></li>
                     <li class="list-group-item">Disponible</li>
-                    <li class="list-group-item">Cantidad en Stock: <% p.stock %>  </li>
+                    <li class="list-group-item">Stock: <%= p.stock %></li>
                 </ul>
                 <div class="card-body">
-                    <a href="/Detalles/<% p._id %> " class="card-link">Ver Detalles</a>
-                    <a href="/Carrito/<% p._id %> " class="card-link">🛒Agregar al Carrito</a>
+                    <a href="/Detalles/<%= p._id %>" class="card-link">Ver Detalles</a>
+                    <a href="/Carrito/<%= p._id %>" class="card-link">🛒Agregar</a>
                 </div>
             </div>
+        <% }) %>
     </div>
-<% }) %>
-
 
 <!-- include footer -->
 <%- include('include/_footer') %>
