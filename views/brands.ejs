@@ -5,11 +5,12 @@
 
 
 <main id="site-main">
-    <div class="container mt-4">
         <h1 class="mb-3">Marcas</h1>
         <p class="mb-4">
-            Descubre las mejores marcas de productos de aseo para tu hogar.
+            Tus marcas favoritas.
         </p>
+    <div class="container mt-4">
+
         <!-- GRID -->
         <div class="brands-grid">
             <% brands.forEach(b => { %>
@@ -18,7 +19,7 @@
                     <img src="/img/default-brand.png" class="card-img-top" alt="marca">
                     <div class="card-body text-center">
                         <h5 class="card-title"><%= b.nombre %></h5>
-                        <a href="/brand/<%= b._id %>" class="btn btn-outline-primary w-100 mt-2">
+                        <a href="/brand/<%= b.nombre %>" class="btn btn-outline-primary w-100 mt-2">
                             Ver productos
                         </a>
                     </div>

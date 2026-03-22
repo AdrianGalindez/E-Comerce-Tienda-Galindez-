@@ -20,8 +20,11 @@ var schema = new mongoose.Schema({
     precioUnitario: {
         type: Number,
         required: true
+    },
+    subtotal: {
+    type: Number,
+    required: true
     }
-
 })
 
 const SaleDetaildb = mongoose.model('SaleDetaildb', schema);

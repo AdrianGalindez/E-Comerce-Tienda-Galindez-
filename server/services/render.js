@@ -14,19 +14,6 @@ exports.homeRoutes = (req, res) => {
 };
 
 
-// // Categoría dinámica
-// exports.category = (req, res) => {
-//     axios.get('http://localhost:3000/api/productos')
-//         .then(response => {
-//             const productos = response.data.filter(p => 
-//                 p.categoria?.nombre === req.params.nombre,
-//                 console.log("CATEGORIA:", req.params.nombre)
-//             );
-//             console.log("CATEGORIA:", req.params.nombre);
-//             res.render('categories', { productos });
-//         })
-//         .catch(err => res.send(err));
-// };
 exports.category = (req, res) => {
     axios.get('http://localhost:3000/api/productos')
         .then(response => {
@@ -66,11 +53,41 @@ exports.car = (req, res) => {
 };
 
 
+
+exports.brands = (req, res) => {
+    axios.get('http://localhost:3000/api/marcas')
+        .then(response => {
+
+            const marcas = response.data;
+
+            res.render('brands', { brands: marcas });
+
+        })
+        .catch(err => res.send(err));
+};
+
+exports.Productbrands = (req, res) => {
+    axios.get('http://localhost:3000/api/productos')
+        .then(response => {
+
+            const data = response.data;
+
+            // 1️Filtrar productos
+            const productos = data.filter(p => 
+                p.marca?.nombre === req.params.marca
+            );
+            res.render('Product_brands', { products, marca: req.params.marca });
+
+        })
+        .catch(err => res.send(err));
+};
+
+
 // Marcas (cliente)
 exports.brands = (req, res) => {
     axios.get('http://localhost:3000/api/marcas')
         .then(response => {
-            res.render('brands', { marcas: response.data });
+            res.render('brands', { brands: response.data });
         })
         .catch(err => res.send(err));
 };

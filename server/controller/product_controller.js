@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 exports.create = (req, res) => {
 
     // Validación básica
-    if (!req.body.nombre || !req.body.precio || !req.body.stock) {
+    if (!req.body.nombre || !req.body.precio || !req.body.precioCosto || !req.body.stock) {
         return res.status(400).send({ message: "Faltan datos obligatorios" });
     }
 
@@ -22,14 +22,30 @@ exports.create = (req, res) => {
     if (req.body.proveedor && !mongoose.Types.ObjectId.isValid(req.body.proveedor)) {
         return res.status(400).send({ message: "ID de proveedor inválido" });
     }
-
-    console.log("BODY:", req.body);
+    if (isNaN(req.body.precio) || isNaN(req.body.precioCosto)) {
+    return res.status(400).send({
+        message: "Precio y costo deben ser números"
+    });
+    }
+    if (Number(req.body.precio) < Number(req.body.precioCosto)) {
+    return res.status(400).send({
+        message: "El precio de venta no puede ser menor al costo"
+        });
+    }
+    if (isNaN(req.body.stock)) {
+    return res.status(400).send({
+        message: "El stock debe ser un número"
+    });
+    }
+    
+    console.log("BODY PRODUCTO:", req.body);
 
     const product = new Productdb({
         nombre: req.body.nombre,
         marca: req.body.marca,
         categoria: req.body.categoria,
         proveedor: req.body.proveedor,
+        precioCosto: Number(req.body.precioCosto),
         precio: Number(req.body.precio), 
         stock: Number(req.body.stock)
     });
@@ -70,11 +86,31 @@ exports.find = (req,res)=>{
 }
 
 // update
-exports.update = (req,res)=>{
-    Productdb.findByIdAndUpdate(req.params.id, req.body)
-        .then(data => res.send(data))
-        .catch(err => res.status(500).send(err))
-}
+exports.update = async (req, res) => {
+    try {
+        const product = await Productdb.findById(req.params.id);
+
+        if (!product) {
+            return res.status(404).send({ message: "Producto no encontrado" });
+        }
+
+        const nuevoPrecio = req.body.precio ? Number(req.body.precio) : product.precio;
+        const nuevoCosto = req.body.precioCosto ? Number(req.body.precioCosto) : product.precioCosto;
+
+        if (nuevoPrecio < nuevoCosto) {
+            return res.status(400).send({
+                message: "El precio no puede ser menor al costo"
+            });
+        }
+
+        const updated = await Productdb.findByIdAndUpdate(req.params.id, req.body, { new: true });
+
+        res.send(updated);
+
+    } catch (err) {
+        res.status(500).send(err);
+    }
+};
 
 // delete
 exports.delete = (req,res)=>{

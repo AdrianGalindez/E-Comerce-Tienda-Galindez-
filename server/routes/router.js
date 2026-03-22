@@ -87,7 +87,7 @@ route.get('/read-categoria', services.read_categories);
 route.post('/read-categoria', services.read_categories);
 route.get('/update-categoria', services.read_categories);
 route.post('/update-categoria', services.read_categories);
-
+route.get('/brand/:marca', services.Productbrands);
 
 route.get('/create-marca', services.create_brand_form);
 route.post('/create-marca', services.create_brand);
