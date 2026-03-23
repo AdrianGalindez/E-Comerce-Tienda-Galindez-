@@ -76,7 +76,7 @@ exports.Productbrands = (req, res) => {
             const productos = data.filter(p => 
                 p.marca?.nombre === req.params.marca
             );
-            res.render('Product_brands', { products, marca: req.params.marca });
+            res.render('Product_brands', { products : productos , marca: req.params.marca });
 
         })
         .catch(err => res.send(err));

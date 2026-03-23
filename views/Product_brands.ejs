@@ -5,24 +5,30 @@
 
 
 <main id="site-main">
-        <h1 class="mb-3">Productos de la marca <%= marca %></h1>
+        <h1 class="mb-3">Productos de la marca: <%= marca %></h1>
         <p class="mb-4">
             Descubre los productos de esta marca.
         </p>
-    <div class="container mt-4">
 
-        <!-- GRID -->
-        <div class="products-grid">
-            <% products.forEach(p => { %>
-                <div class="card product-card">
-                    <img src="/img/default-product.png" class="card-img-top" alt="producto">
-                    <div class="card-body text-center">
-                        <h5 class="card-title"><%= p.nombre %></h5>
-                        <p class="card-text">$<%= p.precio %></p>
-                    </div>
+    <div class="container-cards">
+        <% products.forEach(p => { %>
+            <div class="card">
+                <img src="/img/arroz.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title"><%= p.nombre %></h5>
+                    <p class="card-text"><%= p.descripcion %></p>
                 </div>
-            <% }) %>
-        </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">$ <%= p.precio %></li>
+                    <li class="list-group-item">Disponible</li>
+                    <li class="list-group-item">Stock: <%= p.stock %></li>
+                </ul>
+                <div class="card-body">
+                    <a href="/Detalles/<%= p._id %>" class="card-link">Ver Detalles</a>
+                    <a href="/Carrito/<%= p._id %>" class="card-link">🛒Agregar</a>
+                </div>
+            </div>
+        <% }) %>
     </div>
 
 </main>
