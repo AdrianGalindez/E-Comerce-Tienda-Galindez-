@@ -2,7 +2,6 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px 10px;
-    align-items: stretch; 
 }
 
 /* Card más limpia */
@@ -12,11 +11,6 @@
     margin-top: 5%;
 }
 
-.card-img-top {
-    width: 100%;
-    height: 200px;       /* Ajusta al tamaño que necesites */
-    object-fit: cover;   /* Evita que la imagen se distorsione */
-}
 /* Efecto hover tipo e-commerce */
 .card:hover {
     transform: translateY(-5px);

@@ -11,6 +11,7 @@ const app = express();
 app.use(express.json());
 // parse request to body-parser
 app.use(bodyparser.urlencoded({ extended : true}))
+app.use(express.static(path.join(__dirname, 'public')));
 console.log("TODAS LAS ENV:", process.env)
 console.log("MONGO:", process.env.MONGO_URI)
 console.log("DB:", process.env.DB_URI)
@@ -43,7 +44,7 @@ app.set("view engine", "ejs")
 
 // load assets
 app.use('/css', express.static(path.resolve(__dirname, "assets/css")))
-app.use('/img', express.static(path.resolve(__dirname, "assets/img")))
+app.use('/assets', express.static(path.resolve(__dirname, "assets")));
 app.use('/js', express.static(path.resolve(__dirname, "assets/js")))
 
 

@@ -104,6 +104,8 @@ exports.create_product = (req, res) => {
 };
 
 
+
+
 // Mostrar formulario de creación de producto
 exports.create_product_form = (req, res) => {
     // Traemos marcas, categorías y proveedores para los selects del formulario

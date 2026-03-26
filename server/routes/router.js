@@ -1,6 +1,7 @@
 const express = require('express');
 const route = express.Router()
 const services = require('../services/render');
+const upload = require('../middleware/upload'); 
 console.log(services);
 
 
@@ -25,7 +26,7 @@ route.delete('/api/users/:id', userController.delete);
 
 
 //========================API PRODUCTOS=================
-route.post('/api/productos', productController.create);
+route.post('/api/productos', upload.single('foto'), productController.create);
 route.get('/api/productos', productController.find);
 route.put('/api/productos/:id', productController.update);
 route.delete('/api/productos/:id', productController.delete);

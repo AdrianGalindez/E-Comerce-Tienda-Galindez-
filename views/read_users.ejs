@@ -8,7 +8,7 @@
      <table class="table">
   <thead>
     <tr>
-      <th scope="col">#</th>
+      <th scope="col" hidden>#</th>
       <th scope="col">nombre</th>
       <th scope="col">email</th>
       <th scope="col">telefono</th>
@@ -27,7 +27,7 @@
   <tbody>
     <% users.forEach(function(user) { %>
     <tr>
-      <th scope="row"><%= user.id %></th>
+      <th scope="row" hidden><%= user.id %></th>
       <td><%= user.nombre %></td>
       <td><%= user.email %></td>
       <td><%= user.telefono %></td>

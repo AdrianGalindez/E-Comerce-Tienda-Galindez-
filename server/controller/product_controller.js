@@ -1,64 +1,56 @@
 var Productdb = require('../model/product');
 const mongoose = require('mongoose');
-// create
-exports.create = (req, res) => {
+const path = require('path');
 
-    // Validación básica
-    if (!req.body.nombre || !req.body.precio || !req.body.precioCosto || !req.body.stock) {
-        return res.status(400).send({ message: "Faltan datos obligatorios" });
-    }
 
-    // VALIDACIONES DE OBJECTID 
-    if (!mongoose.Types.ObjectId.isValid(req.body.categoria)) {
-        return res.status(400).send({ message: "ID de categoría inválido" });
-    }
-    if (!req.body.proveedor) {
-    delete req.body.proveedor;
-    }
-    if (!mongoose.Types.ObjectId.isValid(req.body.marca)) {
-        return res.status(400).send({ message: "ID de marca inválido" });
+
+// Crear producto
+exports.create = async (req, res) => {
+  try {
+    const { nombre, descripcion, precioCosto, precio, stock, categoria, marca, proveedor } = req.body;
+
+    // Validaciones básicas
+    if (!nombre || !precio || !precioCosto || !stock || !categoria || !marca) {
+      return res.status(400).send({ message: "Faltan datos obligatorios" });
     }
 
-    if (req.body.proveedor && !mongoose.Types.ObjectId.isValid(req.body.proveedor)) {
-        return res.status(400).send({ message: "ID de proveedor inválido" });
+    if (isNaN(precio) || isNaN(precioCosto) || isNaN(stock)) {
+      return res.status(400).send({ message: "Precio, costo y stock deben ser números" });
     }
-    if (isNaN(req.body.precio) || isNaN(req.body.precioCosto)) {
-    return res.status(400).send({
-        message: "Precio y costo deben ser números"
-    });
-    }
-    if (Number(req.body.precio) < Number(req.body.precioCosto)) {
-    return res.status(400).send({
-        message: "El precio de venta no puede ser menor al costo"
-        });
-    }
-    if (isNaN(req.body.stock)) {
-    return res.status(400).send({
-        message: "El stock debe ser un número"
-    });
-    }
-    
-    console.log("BODY PRODUCTO:", req.body);
 
+    if (Number(precio) < Number(precioCosto)) {
+      return res.status(400).send({ message: "El precio de venta no puede ser menor al costo" });
+    }
+
+    // Validación de ObjectId
+    if (!mongoose.Types.ObjectId.isValid(categoria)) return res.status(400).send({ message: "ID de categoría inválido" });
+    if (!mongoose.Types.ObjectId.isValid(marca)) return res.status(400).send({ message: "ID de marca inválido" });
+    if (proveedor && !mongoose.Types.ObjectId.isValid(proveedor)) return res.status(400).send({ message: "ID de proveedor inválido" });
+
+    // Imagen
+    const rutaImagen = req.file ? `/assets/img/${req.file.filename}` : null;
+
+    // Crear producto
     const product = new Productdb({
-        nombre: req.body.nombre,
-        marca: req.body.marca,
-        categoria: req.body.categoria,
-        proveedor: req.body.proveedor,
-        precioCosto: Number(req.body.precioCosto),
-        precio: Number(req.body.precio), 
-        stock: Number(req.body.stock)
+      nombre,
+      descripcion: descripcion || "",
+      precioCosto: Number(precioCosto),
+      precio: Number(precio),
+      stock: Number(stock),
+      categoria,
+      marca,
+      proveedor: proveedor || null,
+      foto: rutaImagen
     });
 
-    product.save()
-        .then(data => res.send(data))
-        .catch(err => {
-            console.error("ERROR REAL:", err);
-            res.status(500).send({
-                message: err.message
-            });
-        });
+    const savedProduct = await product.save();
+    res.status(201).redirect('/read-producto'); // redirige a la lista de productos
+  } catch (err) {
+    console.error("ERROR CREATE PRODUCT:", err);
+    res.status(500).send({ message: err.message });
+  }
 };
+
 
 // find
 exports.find = (req,res)=>{

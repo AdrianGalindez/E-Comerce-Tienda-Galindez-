@@ -9,7 +9,7 @@
   <table class="table">
     <thead>
       <tr>
-        <th scope="col">#</th>
+        <th scope="col" hidden>#</th>
         <th scope="col">Nombre</th>
         <th scope="col">Teléfono</th>
         <th scope="col">Dirección</th>
@@ -20,7 +20,7 @@
     <tbody>
       <% providers.forEach(function(provider) { %>
       <tr>
-        <th scope="row"><%= provider._id %></th>
+        <th scope="row" hidden><%= provider._id %></th>
         <td><%= provider.nombre %></td>
         <td><%= provider.telefono %></td>
         <td><%= provider.direccion %></td>

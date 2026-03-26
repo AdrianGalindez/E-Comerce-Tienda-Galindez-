@@ -8,7 +8,7 @@
   <table class="table">
     <thead>
       <tr>
-        <th scope="col">#</th>
+        <th scope="col" hidden>#</th>
         <th scope="col">Nombre</th>
         <th scope="col">Editar</th>
         <th scope="col">Eliminar</th>
@@ -17,7 +17,7 @@
     <tbody>
       <% brands.forEach(function(brand) { %>
       <tr>
-        <th scope="row"><%= brand._id %></th>
+        <th scope="row" hidden><%= brand._id %></th>
         <td><%= brand.nombre %></td>
 
         <td>

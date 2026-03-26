@@ -8,7 +8,7 @@
   <table class="table">
     <thead>
       <tr>
-        <th scope="col">#</th>
+        <th scope="col" hidden>#</th>
         <th scope="col">Fecha</th>
         <th scope="col">Total</th>
         <th scope="col">Editar</th>
@@ -18,7 +18,7 @@
     <tbody>
       <% sales.forEach(function(sale) { %>
       <tr>
-        <th scope="row"><%= sale._id %></th>
+        <th scope="row" hidden><%= sale._id %></th>
 
         <td>
           <%= new Date(sale.fecha).toLocaleDateString() %>

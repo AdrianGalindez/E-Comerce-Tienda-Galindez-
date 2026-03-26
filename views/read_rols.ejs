@@ -10,7 +10,7 @@
   <table class="table">
     <thead>
       <tr>
-        <th scope="col">#</th>
+        <th scope="col" hidden>#</th>
         <th scope="col">Nombre</th>
         <th scope="col">Descripción</th>
         <th scope="col">Editar</th>
@@ -20,7 +20,7 @@
     <tbody>
       <% roles.forEach(function(rol) { %>
       <tr>
-        <th scope="row"><%= rol._id %></th>
+        <th scope="row" hidden><%= rol._id %></th>
         <td><%= rol.nombre %></td>
         <td><%= rol.descripcion %></td>
 
