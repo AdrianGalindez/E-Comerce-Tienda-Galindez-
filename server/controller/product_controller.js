@@ -105,8 +105,17 @@ exports.update = async (req, res) => {
 };
 
 // delete
-exports.delete = (req,res)=>{
-    Productdb.findByIdAndDelete(req.params.id)
-        .then(data => res.send({ message : "Producto eliminado"}))
-        .catch(err => res.status(500).send(err))
-}
+exports.delete = async (req, res) => {
+    try {
+        const data = await Productdb.findByIdAndDelete(req.params.id);
+
+        if (!data) {
+            return res.status(404).send({ message: "Producto no encontrado" });
+        }
+
+        res.send({ message: "Producto eliminado correctamente" });
+
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};

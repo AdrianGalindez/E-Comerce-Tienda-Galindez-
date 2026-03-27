@@ -4,7 +4,9 @@
 
 
 <main>
-
+<div>
+<h1>Gestionar Productos</h1>
+</div>
   <table class="table">
     <thead>
       <tr>
@@ -59,7 +61,7 @@
         </td>
 
         <td>
-          <a href="/api/products/<%= product._id %>" class="btn btn-danger delete">Eliminar</a>
+          <a href="/delete-producto/<%= product._id %>" class="btn btn-danger delete">Eliminar</a>
         </td>
       </tr>
       <% }); %>

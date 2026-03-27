@@ -20,12 +20,21 @@ exports.find = (req,res)=>{
 
 exports.update = (req,res)=>{
     Brand_db.findByIdAndUpdate(req.params.id, req.body)
-        .then(data => res.redirect('/create-marcas'))
+        .then(data =>res.redirect('/create-marca'))
         .catch(err => res.status(500).send(err))
 }
 
-exports.delete = (req,res)=>{
-    Brand_db.findByIdAndDelete(req.params.id)
-        .then(data => res.send({ message : "Marca eliminada"}))
-        .catch(err => res.status(500).send(err))
-}
+exports.delete = async (req, res) => {
+    try {
+        const data = await Brand_db.findByIdAndDelete(req.params.id);
+
+        if (!data) {
+            return res.status(404).send({ message: "Marca no encontrada" });
+        }
+
+        res.send({ message: "Marca eliminada correctamente" });
+
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};

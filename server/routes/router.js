@@ -88,22 +88,25 @@ route.get('/read-categoria', services.read_categories);
 route.post('/read-categoria', services.read_categories);
 route.get('/update-categoria', services.read_categories);
 route.post('/update-categoria', services.read_categories);
+route.get('/delete-categoria/:id', services.delete_category);
 route.get('/brand/:marca', services.Productbrands);
 
+//
 route.get('/create-marca', services.create_brand_form);
 route.post('/create-marca', services.create_brand);
 route.get('/read-marca', services.read_brands);
 route.get('/update-marca', services.update_brand);
 route.post('/update-marca', services.update_brand);
+route.get('/delete-marca/:id', services.delete_brand);
 
-
+// 
 route.post('/create-producto', services.create_product);
 route.get('/read-producto', services.read_products);
 route.post('/read-producto', services.read_products);
 route.get('/update-producto', services.read_products);
 route.post('/update-producto', services.read_products);
 route.get('/create-producto', services.create_product_form);
-
+route.get('/delete-producto/:id', services.delete_product);
 
 // Mostrar formulario de creación
 route.get('/create-proveedor', services.create_provider_form);
@@ -112,16 +115,18 @@ route.get('/read-proveedor', services.read_providers);
 route.post('/read-proveedor', services.read_providers);
 route.get('/update-proveedor', services.update_provider);
 route.post('/update-proveedor', services.update_provider);
+route.get('/delete-proveedor/:id', services.delete_provider);
 
-
+// 
 route.post('/create-rol', services.create_rol);
 route.get('/create-rol', services.create_rol);
 route.post('/read-rol', services.read_roles);
 route.get('/read-rol', services.read_roles);
 route.post('/update-rol', services.read_roles);
 route.get('/update-rol', services.read_roles);
+route.get('/delete-rol/:id', services.delete_rol);
 
-
+// 
 route.post('/create-ventas', services.sales);
 route.get('/create-ventas', services.sales);
 route.post('/read-ventas', services.sales);
@@ -131,6 +136,7 @@ route.get('/update-ventas', services.sales);
 route.get('/create-ventas-form', services.create_sale_form);
 route.get('/create-detalle-venta', services.create_sale_detail_form);
 
+// 
 route.get('/add-user-form', services.create_user_form);
 route.get('/add-user', services.add_user);
 route.post('/add-user', services.add_user);
@@ -138,6 +144,6 @@ route.post('/read-user', services.read_users);
 route.get('/read-user', services.read_users);
 route.post('/update-user', services.update_user);
 route.get('/update-user', services.update_user);
-
+route.get('/delete-user/:id', services.delete_user);
 
 module.exports = route;

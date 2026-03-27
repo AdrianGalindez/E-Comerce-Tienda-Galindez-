@@ -1,0 +1,102 @@
+<%- include('../include/_header') %>
+
+<div class="analytics-container">
+
+    <h1>📊 Dashboard de Ventas</h1>
+
+    <!-- ================= KPIs ================= -->
+    <div class="kpi-grid">
+
+        <div class="kpi-card">
+            <h3>💰 Ventas Totales</h3>
+            <p>$<%= totalVentas %></p>
+        </div>
+
+        <div class="kpi-card">
+            <h3>📦 Productos Vendidos</h3>
+            <p><%= totalProductosVendidos %></p>
+        </div>
+
+        <div class="kpi-card">
+            <h3>🧾 Órdenes</h3>
+            <p><%= totalOrdenes %></p>
+        </div>
+
+        <div class="kpi-card">
+            <h3>📈 Ganancia</h3>
+            <p>$<%= gananciaTotal %></p>
+        </div>
+
+    </div>
+
+    <!-- ================= TOP PRODUCTOS ================= -->
+    <div class="section">
+        <h2>🔥 Productos Más Vendidos</h2>
+
+        <% topProductos.forEach(p => { %>
+            <div class="bar-item">
+                <span><%= p.nombre %></span>
+                <div class="bar">
+                    <div class="fill" style="width: <%= p.porcentaje %>%"></div>
+                </div>
+                <span><%= p.cantidad %> ventas</span>
+            </div>
+        <% }) %>
+
+    </div>
+
+    <!-- ================= VENTAS POR DIA ================= -->
+    <div class="section">
+        <h2>📅 Ventas por Día</h2>
+
+        <% ventasPorDia.forEach(v => { %>
+            <div class="bar-item">
+                <span>Día <%= v.dia %></span>
+                <div class="bar">
+                    <div class="fill green" style="width: <%= v.porcentaje %>%"></div>
+                </div>
+                <span>$<%= v.total %></span>
+            </div>
+        <% }) %>
+
+    </div>
+
+    <!-- ================= TABLA ================= -->
+    <div class="section">
+        <h2>📋 Detalle de Productos</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Ventas</th>
+                    <th>Ingresos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% topProductos.forEach(p => { %>
+                    <tr>
+                        <td><%= p.nombre %></td>
+                        <td><%= p.cantidad %></td>
+                        <td>$<%= p.total %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ================= ALERTAS ================= -->
+    <div class="section">
+        <h2>⚠️ Bajo Stock</h2>
+
+        <% productosBajoStock.forEach(p => { %>
+            <div class="alert-card">
+                <strong><%= p.nombre %></strong> → <%= p.stock %> unidades
+            </div>
+        <% }) %>
+
+    </div>
+
+</div>
+
+<%- include('../include/_footer') %>

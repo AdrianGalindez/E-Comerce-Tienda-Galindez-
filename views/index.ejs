@@ -12,21 +12,21 @@
                     </div>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="/img/farmacia.jpg" class="d-block w-100" alt="...">
+                        <img src="/assets/img/farmacia.jpg" class="d-block w-100" alt="...">
                         <div class="carousel-caption d-none d-md-block">
                             <h5>Medicamentos</h5>
                             <p>Medicamentos a los mejores precios.</p>
                         </div>
                     </div>
                     <div class="carousel-item">
-                         <img src="/img/granos.jpg" class="d-block w-100" alt="...">
+                         <img src="/assets/img/granos.jpg" class="d-block w-100" alt="...">
                          <div class="carousel-caption d-none d-md-block">
                              <h5>Granos</h5>
                              <p>Alimentos nutritivos y de calidad.</p>
                          </div>
                     </div>
                     <div class="carousel-item">
-                         <img src="/img/papeleria.jpg" class="d-block w-100" alt="...">
+                         <img src="/assets/img/papeleria.jpg" class="d-block w-100" alt="...">
                          <div class="carousel-caption d-none d-md-block">
                              <h5>Papelería</h5>
                              <p>Productos de oficina y escolar de calidad.</p>
@@ -76,7 +76,6 @@
         <% productos.forEach(p => { %>
         <div class="card" style="width: 18rem;">
             <img src="<%= p.foto %>" class="card-img-top" alt="...">
-             <td><%= p.foto %></td>
             <div class="card-body">
                 <h5 class="card-title"><%= p.nombre %></h5>
                 <p class="card-text"><%= p.descripcion %></p>

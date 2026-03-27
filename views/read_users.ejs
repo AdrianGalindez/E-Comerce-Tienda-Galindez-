@@ -4,7 +4,9 @@
 
 
 <main>
-
+<div>
+<h1>Gestionar Usuarios</h1>
+</div>
      <table class="table">
   <thead>
     <tr>
@@ -39,6 +41,8 @@
       <td><%= user.ubicacion %></td>
       <td><%= user.estado %></td>
       <td><%= user.fecha_registro %></td>
+      <td><a href="/update-user/<%= user._id %>" class="btn btn-warning">Editar</a></td>
+      <td><a href="/delete-user/<%= user._id %>" class="btn btn-danger delete">Eliminar</a></td>
     </tr>
     <% }); %>
       <tr>

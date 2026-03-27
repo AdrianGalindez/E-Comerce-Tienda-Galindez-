@@ -93,22 +93,42 @@ exports.update = (req, res)=>{
 // DELETE
 // =======================
 
-exports.delete = (req, res)=>{
-    const id = req.params.id;
+const Productdb = require('../model/product');
 
-    Providerdb.findByIdAndDelete(id)
-        .then(data => {
-            if(!data){
-                res.status(404).send({ message : `Cannot Delete proveedor with id ${id}. Maybe id is wrong`})
-            }else{
-                res.send({
-                    message : "Proveedor was deleted successfully!"
-                })
-            }
-        })
-        .catch(err =>{
-            res.status(500).send({
-                message: "Could not delete proveedor with id=" + id
+exports.delete = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        if (!id) {
+            return res.status(400).send({
+                message: "ID requerido"
             });
+        }
+
+        // 🔴 VALIDAR RELACIÓN CON PRODUCTOS
+        const productos = await Productdb.find({ proveedor: id });
+
+        if (productos.length > 0) {
+            return res.status(400).send({
+                message: "No puedes eliminar este proveedor porque tiene productos asociados"
+            });
+        }
+
+        const data = await Providerdb.findByIdAndDelete(id);
+
+        if (!data) {
+            return res.status(404).send({
+                message: "Proveedor no encontrado"
+            });
+        }
+
+        res.send({
+            message: "Proveedor eliminado correctamente"
         });
-}
+
+    } catch (err) {
+        res.status(500).send({
+            message: err.message
+        });
+    }
+};

@@ -6,7 +6,9 @@
 
 
 <main>
-
+<div>
+<h1>Gestionar Roles</h1>
+</div>
   <table class="table">
     <thead>
       <tr>
@@ -29,7 +31,7 @@
         </td>
 
         <td>
-          <a href="/api/roles/<%= rol._id %>" class="btn btn-danger delete">Eliminar</a>
+          <a href="/delete-rol/<%= rol._id %>" class="btn btn-danger delete">Eliminar</a>
         </td>
       </tr>
       <% }); %>

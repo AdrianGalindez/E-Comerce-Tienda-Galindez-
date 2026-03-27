@@ -5,7 +5,9 @@
 
 
 <main>
-
+<div>
+<h1>Gestionar Proveedores</h1>
+</div>
   <table class="table">
     <thead>
       <tr>
@@ -30,7 +32,7 @@
         </td>
 
         <td>
-          <a href="/api/providers/<%= provider._id %>" class="btn btn-danger delete">Eliminar</a>
+          <a href="/delete-proveedor/<%= provider._id %>" class="btn btn-danger delete">Eliminar</a>
         </td>
       </tr>
       <% }); %>

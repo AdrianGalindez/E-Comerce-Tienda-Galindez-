@@ -9,27 +9,26 @@
         <p class="mb-4">
             Tus marcas favoritas.
         </p>
-    <div class="container mt-4">
 
-    <div class="container-cards">
-        <div class="card" style="width: 18rem;">
-            <img src="/img/arroz.jpg" class="card-img-top" alt="...">
+<div class="container-cards">
+    <% brands.forEach(function(brand){ %>
+        <div class="card" ">
+            <!-- Imagen opcional -->
+            <img src="assets/img/default.jpg" alt="marca">
             <div class="card-body">
-                <h5 class="card-title">Arroz</h5>
-                <p class="card-text">Arroz de alta calidad, perfecto para tu familia.</p>
+                <h5 class="card-title"><%= brand.nombre %></h5>
+                <p class="card-text">
+                    Marca registrada en el sistema
+                </p>
             </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">2300$ Libra</li>
-                <li class="list-group-item">Disponible</li>
-                <li class="list-group-item">Cantidad en Stock: 50</li>
-            </ul>
             <div class="card-body">
-                <a href="#" class="card-link">Ver Detalles</a>
-                <a href="#" class="card-link">Agregar al Carrito</a>
+                <a href="/brand/<%= brand.nombre %>" class="card-link">
+                    Ver productos
+                </a>
             </div>
         </div>
-    </div>
-    </div>
+    <% }) %>
+</div>
 </main>
 
 

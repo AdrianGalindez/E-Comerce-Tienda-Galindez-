@@ -148,7 +148,7 @@ exports.update_products = (req, res) => {
 exports.delete_product = (req, res) => {
     axios.delete(`http://localhost:3000/api/productos/${req.params.id}`)
         .then(response => {
-            res.redirect('read_products');
+             res.redirect('/read-producto');
         })
         .catch(err => res.send(err));
 };
@@ -193,6 +193,14 @@ exports.update_category = (req, res) => {
         .catch(err => res.send(err));
 };
 
+exports.delete_category = (req, res) => {
+    axios.delete(`http://localhost:3000/api/categorias/${req.params.id}`)
+        .then(response => {
+            res.redirect('/read-categoria');
+        })
+        .catch(err => res.send(err));
+};
+
 
 // ==================== MARCAS ===========================
 
@@ -230,6 +238,13 @@ exports.update_brand = (req, res) => {
         .catch(err => res.send(err));
 };
 
+exports.delete_brand = (req, res) => {
+    axios.delete(`http://localhost:3000/api/marcas/${req.params.id}`)
+        .then(response => {
+            res.redirect('/read-marca'); // importante
+        })
+        .catch(err => res.send(err));
+};
 
 
 // ==================== PROVEEDORES ======================
@@ -267,7 +282,13 @@ exports.update_provider = (req, res) => {
         .catch(err => res.send(err));
 };
 
-
+exports.delete_provider = (req, res) => {
+    axios.delete(`http://localhost:3000/api/proveedores/${req.params.id}`)
+        .then(response => {
+            res.redirect('/read-proveedor');
+        })
+        .catch(err => res.send(err));
+};
 
 
 // ==================== USUARIOS =========================
@@ -306,7 +327,13 @@ exports.update_user = async (req, res) => {
     } catch (err) { res.send(err); }
 };
 
-
+exports.delete_user = (req, res) => {
+    axios.delete(`http://localhost:3000/api/users/${req.params.id}`)
+        .then(response => {
+            res.redirect('/read-user');
+        })
+        .catch(err => res.send(err));
+};
 
 // ==================== ROLES ============================
 exports.create_rol_form = (req, res) => {
@@ -337,6 +364,13 @@ exports.create_rol = (req, res) => {
     res.render('create_rol');
 };
 
+exports.delete_rol = (req, res) => {
+    axios.delete(`http://localhost:3000/api/roles/${req.params.id}`)
+        .then(response => {
+            res.redirect('/read-rol');
+        })
+        .catch(err => res.send(err));
+};
 
 // ==================== VENTAS ===========================
 exports.create_sale_form = (req, res) => {
