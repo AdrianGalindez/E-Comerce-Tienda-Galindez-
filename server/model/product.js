@@ -9,9 +9,10 @@ var schema = new mongoose.Schema({
     descripcion: {
         type: String,
     },    
-    foto: {
-        type: String,
-    },    
+    fotos: {
+    type: [String], // array de rutas
+    validate: [arr => arr.length <= 4, 'Máximo 4 imágenes']
+    },  
     marca: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'branddb',

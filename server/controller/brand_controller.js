@@ -1,16 +1,24 @@
 var Brand_db = require('../model/brands');
 
-exports.create = (req,res)=>{
+exports.create = (req, res) => {
+
+    // AQUÍ CAPTURAS LA IMAGEN
+    const rutaImagen = req.file 
+        ? `/assets/img/${req.file.filename}` 
+        : null;
+
     const marca = new Brand_db({
-        nombre : req.body.nombre
+        nombre: req.body.nombre,
+        foto: rutaImagen 
     });
 
     marca.save()
         .then(data => {
             res.redirect('/create-marca');
         })
-        .catch(err => res.status(500).send(err))
-}
+        .catch(err => res.status(500).send(err));
+};
+
 
 exports.find = (req,res)=>{
     Brand_db.find()

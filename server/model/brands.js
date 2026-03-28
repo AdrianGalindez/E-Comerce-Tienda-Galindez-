@@ -6,6 +6,9 @@ var schema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true
+    },
+    foto:{
+        type: String,
     }
 
 })

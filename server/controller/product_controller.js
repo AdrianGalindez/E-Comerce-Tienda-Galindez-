@@ -28,7 +28,9 @@ exports.create = async (req, res) => {
     if (proveedor && !mongoose.Types.ObjectId.isValid(proveedor)) return res.status(400).send({ message: "ID de proveedor inválido" });
 
     // Imagen
-    const rutaImagen = req.file ? `/assets/img/${req.file.filename}` : null;
+    const rutasImagenes = req.files
+      ? req.files.map(file => `/assets/img/${file.filename}`)
+      : [];
 
     // Crear producto
     const product = new Productdb({
@@ -40,7 +42,7 @@ exports.create = async (req, res) => {
       categoria,
       marca,
       proveedor: proveedor || null,
-      foto: rutaImagen
+      fotos: rutasImagenes
     });
 
     const savedProduct = await product.save();
