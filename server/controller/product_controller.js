@@ -1,7 +1,7 @@
 var Productdb = require('../model/product');
 const mongoose = require('mongoose');
 const path = require('path');
-
+const fs = require('fs'); 
 
 
 // Crear producto
@@ -80,6 +80,7 @@ exports.find = (req,res)=>{
 }
 
 // update
+
 exports.update = async (req, res) => {
     try {
         const product = await Productdb.findById(req.params.id);
@@ -97,11 +98,71 @@ exports.update = async (req, res) => {
             });
         }
 
-        const updated = await Productdb.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        // MANEJO DE IMÁGENES 🔥
 
-        res.send(updated);
+        let fotosActuales = [...product.fotos];
+
+        // 1. ELIMINAR IMÁGENES
+        if (req.body.eliminarFotos) {
+            const eliminar = Array.isArray(req.body.eliminarFotos)
+                ? req.body.eliminarFotos
+                : [req.body.eliminarFotos];
+
+            eliminar.forEach(foto => {
+                const ruta = path.join(__dirname, '../public', foto);
+                if (fs.existsSync(ruta)) {
+                    fs.unlinkSync(ruta);
+                }
+            });
+
+            fotosActuales = fotosActuales.filter(f => !eliminar.includes(f));
+        }
+
+        // 2. REEMPLAZAR IMÁGENES INDIVIDUALES
+        if (req.files) {
+            Object.keys(req.files).forEach(key => {
+                if (key.startsWith('foto_')) {
+                    const index = parseInt(key.split('_')[1]);
+                    const file = req.files[key][0];
+
+                    if (file && fotosActuales[index]) {
+                        fotosActuales[index] = `/assets/img/${file.filename}`;
+                    }
+                }
+            });
+        }
+
+        // 3. AGREGAR NUEVAS IMÁGENES
+        if (req.files && req.files.nuevasFotos) {
+            const nuevas = req.files.nuevasFotos.map(f => `/assets/img/${f.filename}`);
+            fotosActuales = [...fotosActuales, ...nuevas];
+        }
+
+        // 4. LIMPIAR (PRO)
+        fotosActuales = [...new Set(fotosActuales)]; // sin duplicados
+        fotosActuales = fotosActuales.slice(0, 4);   // máximo 4
+
+        // UPDATE FINAL
+        const updated = await Productdb.findByIdAndUpdate(
+            req.params.id,
+            {
+                nombre: req.body.nombre || product.nombre,
+                descripcion: req.body.descripcion || product.descripcion,
+                precioCosto: nuevoCosto,
+                precio: nuevoPrecio,
+                stock: req.body.stock !== undefined ? Number(req.body.stock) : product.stock,
+                categoria: req.body.categoria || product.categoria,
+                marca: req.body.marca || product.marca,
+                proveedor: req.body.proveedor || product.proveedor,
+                fotos: fotosActuales
+            },
+            { new: true }
+        );
+
+        res.redirect('/read-producto');
 
     } catch (err) {
+        console.error("ERROR UPDATE:", err);
         res.status(500).send(err);
     }
 };

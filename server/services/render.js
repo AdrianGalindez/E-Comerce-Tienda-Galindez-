@@ -54,17 +54,17 @@ exports.car = (req, res) => {
 
 
 
-exports.brands = (req, res) => {
-    axios.get('http://localhost:3000/api/marcas')
-        .then(response => {
+// exports.brands = (req, res) => {
+//     axios.get('http://localhost:3000/api/marcas')
+//         .then(response => {
 
-            const marcas = response.data;
+//             const marcas = response.data;
 
-            res.render('brands', { brands: marcas });
+//             res.render('brands', { brands: marcas });
 
-        })
-        .catch(err => res.send(err));
-};
+//         })
+//         .catch(err => res.send(err));
+// };
 
 exports.Productbrands = (req, res) => {
     axios.get('http://localhost:3000/api/productos')
@@ -82,6 +82,19 @@ exports.Productbrands = (req, res) => {
         .catch(err => res.send(err));
 };
 
+exports.product_detail = (req, res) => {
+    axios.get('http://localhost:3000/api/productos', {
+        params: { id: req.params.id }
+    })
+    .then(response => {
+
+        const product = response.data;
+
+        res.render('product_detail', { product });
+
+    })
+    .catch(err => res.send(err));
+};
 
 // Marcas (cliente)
 exports.brands = (req, res) => {
@@ -136,12 +149,41 @@ exports.read_products = (req, res) => {
 };
 
 
-exports.update_products = (req, res) => {
-    axios.get('http://localhost:3000/api/productos', { params: { id: req.query.id }})
-        .then(response => {
-            res.render('update_products', { productos: response.data });
-        })
-        .catch(err => res.send(err));
+exports.update_products = async (req, res) => {
+    try {
+
+        const brand = await Brand_db.findById(req.params.id);
+
+        if (!brand) {
+            return res.status(404).send({ message: "Marca no encontrada" });
+        }
+
+        // Manejo de imagen
+        let nuevaImagen = brand.foto; // mantiene la actual
+
+        if (req.file) {
+            nuevaImagen = `/assets/img/${req.file.filename}`;
+        }
+
+        // Datos actualizados
+        const updatedData = {
+            nombre: req.body.nombre || brand.nombre,
+            foto: nuevaImagen
+        };
+
+        const updatedBrand = await Brand_db.findByIdAndUpdate(
+            req.params.id,
+            updatedData,
+            { new: true }
+        );
+
+        // Redirección correcta
+        res.redirect('/read-marca');
+
+    } catch (err) {
+        console.error("ERROR UPDATE BRAND:", err);
+        res.status(500).send(err);
+    }
 };
 
 
@@ -256,7 +298,7 @@ exports.create_provider = (req, res) => {
     axios.post('http://localhost:3000/api/proveedores', req.body)
         .then(response => {
             console.log("PROVEEDOR GUARDADO:", req.body);
-            res.redirect('/create-proveedor');
+            res.redirect('/read-proveedor');
         })
         .catch(err => {
             console.log(err);
@@ -273,7 +315,35 @@ exports.read_providers = (req, res) => {
         .catch(err => res.send(err));
 };
 
+// Mostrar formulario de edición
+exports.edit_provider_form = async (req, res) => {
+    try {
+        const id = req.query.id; // ejemplo: /update-proveedor?id=123
+        const response = await axios.get(`http://localhost:3000/api/proveedores/${id}`);
+        const provider = response.data;
+        res.render('update_provider', { provider }); // renderiza el EJS con los datos
+    } catch (err) {
+        console.error("ERROR EDIT PROVIDER FORM:", err.message);
+        res.send(err.message);
+    }
+};
 
+// Enviar actualización
+exports.update_provider_data = async (req, res) => {
+    try {
+        const id = req.params.id; // ejemplo: /update-proveedor/123
+        const body = {
+            nombre: req.body.nombre,
+            telefono: req.body.telefono,
+            direccion: req.body.direccion
+        };
+        await axios.put(`http://localhost:3000/api/proveedores/${id}`, body);
+        res.redirect('/read-proveedor'); // redirige a la lista de proveedores
+    } catch (err) {
+        console.error("ERROR UPDATE PROVIDER:", err.message);
+        res.send(err.message);
+    }
+};
 exports.update_provider = (req, res) => {
     axios.get('http://localhost:3000/api/proveedores', { params: { id: req.query.id }})
         .then(response => {

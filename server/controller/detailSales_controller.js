@@ -31,9 +31,7 @@ exports.find = (req, res) => {
 }
 
 
-// =======================
 // UPDATE
-// =======================
 exports.update = (req, res) => {
 
     SaleDetaildb.findByIdAndUpdate(req.params.id, req.body)
@@ -42,12 +40,11 @@ exports.update = (req, res) => {
 }
 
 
-// =======================
 // DELETE
-// =======================
+
 exports.delete = (req, res) => {
 
-    DetalleVentadb.findByIdAndDelete(req.params.id)
+    SaleDetaildb.findByIdAndDelete(req.params.id)
         .then(data => res.send({ message: "Detalle de venta eliminado" }))
         .catch(err => res.status(500).send(err));
 }

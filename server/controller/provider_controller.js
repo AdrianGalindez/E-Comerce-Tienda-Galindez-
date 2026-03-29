@@ -29,9 +29,7 @@ exports.create = (req,res)=>{
 }
 
 
-// =======================
 // FIND
-// =======================
 
 exports.find = (req, res)=>{
 
@@ -62,36 +60,66 @@ exports.find = (req, res)=>{
 }
 
 
-// =======================
 // UPDATE
-// =======================
-
-exports.update = (req, res)=>{
-    if(!req.body){
-        return res
-            .status(400)
-            .send({ message : "Data to update can not be empty"})
+// GET /api/proveedores/:id
+exports.findById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const provider = await Providerdb.findById(id);
+        if (!provider) return res.status(404).send({ message: "Proveedor no encontrado" });
+        res.send(provider);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
     }
+};
 
-    const id = req.params.id;
+// PUT /api/proveedores/:id
+exports.update = async (req, res) => {
+    try {
+        const id = req.params.id;
+        if (!req.body) return res.status(400).send({ message: "Data to update can not be empty" });
 
-    Providerdb.findByIdAndUpdate(id, req.body, { useFindAndModify: false})
-        .then(data => {
-            if(!data){
-                res.status(404).send({ message : `Cannot Update proveedor with ${id}. Maybe not found!`})
-            }else{
-                res.send(data)
-            }
-        })
-        .catch(err =>{
-            res.status(500).send({ message : "Error updating proveedor information"})
-        })
-}
+        const updatedProvider = await Providerdb.findByIdAndUpdate(
+            id,
+            { 
+                nombre: req.body.nombre,
+                telefono: req.body.telefono,
+                direccion: req.body.direccion
+            },
+            { new: true, useFindAndModify: false }
+        );
+
+        if (!updatedProvider) return res.status(404).send({ message: "Proveedor no encontrado" });
+
+        res.send(updatedProvider);
+    } catch (err) {
+        res.status(500).send({ message: "Error updating proveedor information" });
+    }
+};
+// exports.update = (req, res)=>{
+//     if(!req.body){
+//         return res
+//             .status(400)
+//             .send({ message : "Data to update can not be empty"})
+//     }
+
+//     const id = req.params.id;
+
+//     Providerdb.findByIdAndUpdate(id, req.body, { useFindAndModify: false})
+//         .then(data => {
+//             if(!data){
+//                 res.status(404).send({ message : `Cannot Update proveedor with ${id}. Maybe not found!`})
+//             }else{
+//                 res.send(data)
+//             }
+//         })
+//         .catch(err =>{
+//             res.status(500).send({ message : "Error updating proveedor information"})
+//         })
+// }
 
 
-// =======================
 // DELETE
-// =======================
 
 const Productdb = require('../model/product');
 

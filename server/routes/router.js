@@ -2,8 +2,6 @@ const express = require('express');
 const route = express.Router()
 const services = require('../services/render');
 const upload = require('../middleware/upload'); 
-console.log(services);
-
 
 // controladores de la aplicación
 const userController = require('../controller/user_controller');
@@ -28,9 +26,8 @@ route.delete('/api/users/:id', userController.delete);
 //========================API PRODUCTOS=================
 route.post('/api/productos', upload.array('fotos', 4), productController.create);
 route.get('/api/productos', productController.find);
-route.put('/api/productos/:id', productController.update);
+route.put('/api/productos/:id', upload.array('fotos', 4), productController.update);
 route.delete('/api/productos/:id', productController.delete);
-
 
 //========================API CATEGORIAS=================
 route.post('/api/categorias', categoryController.create);
@@ -42,7 +39,7 @@ route.delete('/api/categorias/:id', categoryController.delete);
 //========================API MARCAS=================
 route.post('/api/marcas', upload.single('foto'), brandController.create);
 route.get('/api/marcas', brandController.find);
-route.put('/api/marcas/:id', brandController.update);
+route.put('/api/marcas/:id', upload.single('foto'), brandController.update);
 route.delete('/api/marcas/:id', brandController.delete);
 
 
@@ -86,27 +83,32 @@ route.get('/create-categoria', services.create_category_form);
 route.post('/create-categoria', services.create_category);
 route.get('/read-categoria', services.read_categories);
 route.post('/read-categoria', services.read_categories);
-route.get('/update-categoria', services.read_categories);
-route.post('/update-categoria', services.read_categories);
+route.get('/update-categoria', services.update_category);
+route.post('/update-categoria', services.update_category);
 route.get('/delete-categoria/:id', services.delete_category);
 route.get('/brand/:marca', services.Productbrands);
 
+// console.log("services.Productbrands:", services.Productbrands);
 //
 route.get('/create-marca', services.create_brand_form);
 route.post('/create-marca', services.create_brand);
 route.get('/read-marca', services.read_brands);
-route.get('/update-marca', services.update_brand);
-route.post('/update-marca', services.update_brand);
+route.get('/update-marca', brandController.getBrandForEdit);
+// route.get('/update-marca', services.update_brand);
+// route.post('/update-marca', services.update_brand);
+route.post('/update-marca/:id', upload.single('foto'), brandController.update); // guarda cambios
 route.get('/delete-marca/:id', services.delete_brand);
 
 // 
 route.post('/create-producto', services.create_product);
 route.get('/read-producto', services.read_products);
 route.post('/read-producto', services.read_products);
-route.get('/update-producto', services.read_products);
-route.post('/update-producto', services.read_products);
+route.get('/update-producto', services.update_products);
+route.post('/update-producto', services.update_products);
 route.get('/create-producto', services.create_product_form);
 route.get('/delete-producto/:id', services.delete_product);
+route.get('/Detalles/:id', services.product_detail);
+
 
 // Mostrar formulario de creación
 route.get('/create-proveedor', services.create_provider_form);
@@ -115,6 +117,8 @@ route.get('/read-proveedor', services.read_providers);
 route.post('/read-proveedor', services.read_providers);
 route.get('/update-proveedor', services.update_provider);
 route.post('/update-proveedor', services.update_provider);
+route.get('/update-proveedor', services.edit_provider_form);
+route.post('/update-proveedor/:id', services.update_provider_data);
 route.get('/delete-proveedor/:id', services.delete_provider);
 
 // 
@@ -122,8 +126,8 @@ route.post('/create-rol', services.create_rol);
 route.get('/create-rol', services.create_rol);
 route.post('/read-rol', services.read_roles);
 route.get('/read-rol', services.read_roles);
-route.post('/update-rol', services.read_roles);
-route.get('/update-rol', services.read_roles);
+route.post('/update-rol', services.update_rol);
+route.get('/update-rol', services.update_rol);
 route.get('/delete-rol/:id', services.delete_rol);
 
 // 
@@ -146,4 +150,32 @@ route.post('/update-user', services.update_user);
 route.get('/update-user', services.update_user);
 route.get('/delete-user/:id', services.delete_user);
 
+
+const funciones = [
+  'homeRoutes',
+  'promotions',
+  'brands',
+  'car',
+  'category',
+  'Productbrands',
+  'create_category_form',
+  'create_category',
+  'read_categories',
+  'delete_category'
+];
+
+funciones.forEach(f => {
+  console.log(`${f}:`, services[f]);
+});
+console.log('SERVICES DISPONIBLES:', services);
+
+console.log("=== Verificando funciones en services ===");
+
+Object.keys(services).forEach(key => {
+    if (typeof services[key] !== 'function') {
+        console.log(`⚠️ Función faltante o mal exportada: ${key} =`, services[key]);
+    } else {
+        console.log(`✅ Función disponible: ${key}`);
+    }
+});
 module.exports = route;

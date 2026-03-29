@@ -26,9 +26,21 @@ exports.find = (req,res)=>{
         .catch(err => res.status(500).send(err))
 }
 
+exports.getBrandForEdit = async (req, res) => {
+    try {
+        const brand = await Brand_db.findById(req.query.id); 
+        if (!brand) {
+            return res.status(404).send("Marca no encontrada");
+        }
+        res.render('update_brands', { brand }); 
+    } catch (err) {
+        res.status(500).send(err);
+    }
+};
+
 exports.update = (req,res)=>{
     Brand_db.findByIdAndUpdate(req.params.id, req.body)
-        .then(data =>res.redirect('/create-marca'))
+        .then(data =>res.redirect('/read-marca'))
         .catch(err => res.status(500).send(err))
 }
 
