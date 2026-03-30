@@ -37,10 +37,10 @@
       <td><%= user.direccion %></td>
       <td><%= user.barrio %></td>
       <td><%= user.ciudad %></td>
-      <td><%= user.punto_referencia %></td>
-      <td><%= user.ubicacion %></td>
+      <td><%= user.puntoReferencia %></td>
+      <td><%= user.ubicacion ? user.ubicacion.lat + ", " + user.ubicacion.lng : "" %></td>
       <td><%= user.estado %></td>
-      <td><%= user.fecha_registro %></td>
+      <td><%= user.fechaRegistro %></td>
       <td><a href="/update-user/<%= user._id %>" class="btn btn-warning">Editar</a></td>
       <td><a href="/delete-user/<%= user._id %>" class="btn btn-danger delete">Eliminar</a></td>
     </tr>
