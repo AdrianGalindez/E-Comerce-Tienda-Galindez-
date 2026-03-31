@@ -1,71 +1,122 @@
-
 <!-- include header -->
-    <%- include('include/_header') %>
+<%- include('include/_header') %>
 <!-- /include header -->
 
+<div class="container">
+    <h1>Carrito de Compras</h1>
+    <p>Revisa los productos que has agregado a tu carrito de compras y realiza el checkout cuando estés listo.</p>
+</div>     
 
-    <!-- Main Site -->
-
-        <div class="container">
-            <h1>Carrito de Compras</h1>
-            <p>Revisa los productos que has agregado a tu carrito de compras y realiza el checkout cuando estés listo.</p>
-        </div>     
-        
 <main class="main-cart">
   <div class="cart-wrapper">
+
+    <!-- Productos en el carrito -->
     <section class="items-section">
+
       <header class="cart-header">
         <h1>Tu Despensa</h1>
-        <span class="badge">3 Artículos</span>
+        <span class="badge"><%= productos.length %> Artículos</span>
       </header>
 
       <div class="product-list">
+
+        <% if(productos.length === 0){ %>
+
+          <p>Tu carrito está vacío.</p>
+
+        <% } %>
+
+        <% productos.forEach(producto => { %>
+
         <article class="product-card">
+
           <div class="img-container">
-            <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=150" alt="Arroz">
+            <img src="<%= producto.foto || '/assets/img/default.jpg' %>" alt="<%= producto.nombre %>">
           </div>
+
           <div class="product-info">
-            <h3>Arroz Grano Largo</h3>
-            <p class="category">Cereales y granos</p>
+            <h3><%= producto.nombre %></h3>
+            <p class="category"><%= producto.categoria?.nombre || 'Sin categoría' %></p>
           </div>
+
+          <!-- Control de cantidad -->
           <div class="quantity-picker">
-            <button class="qty-btn">-</button>
-            <input type="number" value="1" readonly>
-            <button class="qty-btn">+</button>
+
+            <!-- Disminuir -->
+            <form action="/carrito/actualizar" method="POST">
+              <input type="hidden" name="productoId" value="<%= producto._id %>">
+              <input type="hidden" name="cantidad" value="<%= producto.cantidad - 1 %>">
+              <button type="submit">-</button>
+            </form>
+
+            <input type="number" value="<%= producto.cantidad %>" readonly>
+
+            <!-- Aumentar -->
+            <form action="/carrito/actualizar" method="POST">
+              <input type="hidden" name="productoId" value="<%= producto._id %>">
+              <input type="hidden" name="cantidad" value="<%= producto.cantidad + 1 %>">
+              <button type="submit">+</button>
+            </form>
+
           </div>
-          <p class="price">$4.50</p>
-          <button class="remove-btn">✕</button>
+
+          <!-- Precio -->
+          <p class="price">
+            $<%= (producto.precio * producto.cantidad).toFixed(2) %>
+          </p>
+
+          <!-- Eliminar producto -->
+          <form action="/carrito/eliminar" method="POST">
+            <input type="hidden" name="productoId" value="<%= producto._id %>">
+            <button class="remove-btn">✕</button>
+          </form>
+
         </article>
-        </div>
+
+        <% }) %>
+
+      </div>
     </section>
 
+    <!-- Resumen -->
     <aside class="summary-section">
+
       <div class="summary-card">
+
         <h2>Resumen</h2>
+
         <div class="divider"></div>
+
         <div class="summary-line">
           <span>Subtotal</span>
-          <span>$12.50</span>
+          <span>$<%= subtotal.toFixed(2) %></span>
         </div>
+
         <div class="summary-line">
           <span>Envío</span>
           <span class="free">Gratis</span>
         </div>
+
         <div class="divider"></div>
+
         <div class="summary-line total">
           <span>Total</span>
-          <span class="total-amount">$12.50</span>
+          <span class="total-amount">$<%= subtotal.toFixed(2) %></span>
         </div>
-        <button class="checkout-button">
-          Proceder al Pago
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </button>
+
+        <!-- Checkout -->
+        <form action="/checkout" method="POST">
+          <button class="checkout-button">
+            Proceder al Pago
+          </button>
+        </form>
+
       </div>
+
     </aside>
+
   </div>
 </main>
-<!-- /Main Site -->
-
 
 <!-- include footer -->
 <%- include('include/_footer') %>
