@@ -70,19 +70,51 @@ exports.Productbrands = (req, res) => {
         .catch(err => res.send(err));
 };
 
-exports.product_detail = (req, res) => {
-    axios.get('http://localhost:3000/api/productos', {
-        params: { id: req.params.id }
-    })
-    .then(response => {
+// exports.product_detail = (req, res) => {
+//     axios.get('http://localhost:3000/api/productos', {
+//         params: { id: req.params.id }
+//     })
+//     .then(response => {
 
-        const product = response.data;
+//         const product = response.data;
 
-        res.render('product_detail', { product });
+//         res.render('product_detail', { product });
 
-    })
-    .catch(err => res.send(err));
+//     })
+//     .catch(err => res.send(err));
+// };
+
+exports.product_detail = async (req, res) => {
+
+    try {
+
+        const id = req.params.id;
+
+        const [productRes, reviewsRes] = await Promise.all([
+
+            axios.get('http://localhost:3000/api/productos', {
+                params: { id }
+            }),
+
+            axios.get('http://localhost:3000/api/reviews', {
+                params: { producto: id }
+            })
+
+        ]);
+
+        const product = productRes.data;
+        const reviews = reviewsRes.data;
+
+        res.render('product_detail', { product, reviews });
+
+    } catch (err) {
+
+        res.send(err);
+
+    }
+
 };
+
 
 // Marcas (cliente)
 exports.brands = (req, res) => {

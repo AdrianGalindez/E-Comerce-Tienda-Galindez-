@@ -12,7 +12,7 @@ const saleController = require('../controller/sale_controller');
 const providerController = require('../controller/provider_controller');
 const rolController = require('../controller/rol_controller');
 const detailSalesController = require('../controller/detailSales_controller');
-
+const reviewController = require('../controller/reviewController');
 
 // rutas del cliente
 //=======================API USERS====================
@@ -70,6 +70,16 @@ route.post('/api/detalle-ventas', detailSalesController.create);
 route.get('/api/detalle-ventas', detailSalesController.find);
 route.put('/api/detalle-ventas/:id', detailSalesController.update);
 route.delete('/api/detalle-ventas/:id', detailSalesController.delete);
+
+//=========================API REVIEWS=================
+route.post('/api/reviews', upload.fields([
+ { name: 'fotos', maxCount: 5 },
+ { name: 'video', maxCount: 1 }
+]), reviewController.create);
+
+route.get('/api/reviews', reviewController.find);
+route.put('/api/reviews/:id', reviewController.update);
+route.delete('/api/reviews/:id', reviewController.delete);
 
 
 // rutas para consumir las apis desde el cliente
