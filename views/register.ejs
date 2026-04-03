@@ -1,101 +1,31 @@
+<h2>Registro</h2>
 
-<!-- include header -->
-    <%- include('include/_header') %>
-<!-- /include header -->
+<form action="/register" method="POST">
 
-<main class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
+    <input type="text" name="nombre" placeholder="Nombre completo" required>
 
-            <div class="card shadow p-4">
-                <h3 class="text-center mb-4">Registro de Usuario</h3>
+    <input type="email" name="email" placeholder="Email" required>
 
-                <form action="/api/users" method="POST">
+    <input type="password" name="password" placeholder="Contraseña" required>
 
-                    <!-- Nombre -->
-                    <div class="mb-3">
-                        <label class="form-label">Nombre</label>
-                        <input type="text" name="nombre" class="form-control" required>
-                    </div>
+    <input type="text" name="telefono" placeholder="Teléfono" required>
 
-                    <!-- Email -->
-                    <div class="mb-3">
-                        <label class="form-label">Correo</label>
-                        <input type="email" name="email" class="form-control" required>
-                    </div>
+    <input type="text" name="direccion" placeholder="Dirección" required>
 
-                    <!-- Teléfono -->
-                    <div class="mb-3">
-                        <label class="form-label">Teléfono</label>
-                        <input type="text" name="telefono" class="form-control" required>
-                    </div>
+    <input type="text" name="barrio" placeholder="Barrio">
 
-                    <!-- Género -->
-                    <div class="mb-3">
-                        <label class="form-label">Género</label>
-                        <select name="genero" class="form-control">
-                            <option value="">Seleccionar</option>
-                            <option value="Masculino">Masculino</option>
-                            <option value="Femenino">Femenino</option>
-                            <option value="Otro">Otro</option>
-                        </select>
-                    </div>
+    <input type="text" name="ciudad" placeholder="Ciudad">
 
-                    <!-- Dirección -->
-                    <div class="mb-3">
-                        <label class="form-label">Dirección</label>
-                        <input type="text" name="direccion" class="form-control" required>
-                    </div>
+    <input type="text" name="puntoReferencia" placeholder="Punto de referencia">
 
-                    <!-- Barrio -->
-                    <div class="mb-3">
-                        <label class="form-label">Barrio</label>
-                        <input type="text" name="barrio" class="form-control">
-                    </div>
+    <select name="genero">
+        <option value="">Género</option>
+        <option value="Masculino">Masculino</option>
+        <option value="Femenino">Femenino</option>
+    </select>
 
-                    <!-- Ciudad -->
-                    <div class="mb-3">
-                        <label class="form-label">Ciudad</label>
-                        <input type="text" name="ciudad" class="form-control" value="Bogotá">
-                    </div>
+    <button type="submit">Registrarse</button>
 
-                    <!-- Punto de referencia -->
-                    <div class="mb-3">
-                        <label class="form-label">Punto de referencia</label>
-                        <input type="text" name="puntoReferencia" class="form-control">
-                    </div>
+</form>
 
-                    <!-- Ubicación -->
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Latitud</label>
-                            <input type="number" step="any" name="lat" class="form-control">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Longitud</label>
-                            <input type="number" step="any" name="lng" class="form-control">
-                        </div>
-                    </div>
-
-                    <!-- Estado -->
-                    <input type="hidden" name="estado" value="Activo">
-
-                    <!-- Botón -->
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">
-                            Registrarse
-                        </button>
-                    </div>
-
-                </form>
-            </div>
-
-        </div>
-    </div>
-</main>
-
-
-
-<!-- include footer -->
-<%- include('include/_footer') %>
-<!-- /include footer -->
+<p>¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
