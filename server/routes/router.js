@@ -16,6 +16,7 @@ const servicesRenderCart = require('../services/renderCart');
 const servicesLoginLogout = require('../services/renderLoginLogout');
 const servicesRenderHomeRutes = require('../services/renderHomeRoutes');
 const servicesRenderPromotions = require('../services/renderPromotions');
+const servicesRenderPaymentPoint = require('../services/RenderPaymentPoint');
 
 // controladores de la aplicación
 const userController = require('../controller/user_controller');
@@ -195,6 +196,12 @@ route.post('/update-user', isAdmin, servicesRenderUser.update_user);
 route.get('/update-user', isAdmin, servicesRenderUser.update_user);
 route.get('/delete-user/:id', isAdmin, servicesRenderUser.delete_user);
 
+//=======================PAYMENT POINT========================
+route.get('/payment-point', isLogged, servicesRenderPaymentPoint.payment_point);
+route.post('/payment-point', isLogged, servicesRenderPaymentPoint.payment_point);
 
+// ======================== Billing Point =====================
+route.get('/billing-point', isAdmin, servicesRenderPaymentPoint.billing_point);
+route.post('/billing-point', isAdmin, servicesRenderPaymentPoint.billing_point);
 
 module.exports = route;
