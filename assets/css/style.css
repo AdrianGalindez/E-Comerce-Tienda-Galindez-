@@ -107,9 +107,14 @@
 
 
 
+/* read productos  */
 
-
-
+.descripcion-corta{
+    max-width: 200px;      /* ancho máximo de la celda */
+    white-space: nowrap;   /* evita salto de línea */
+    overflow: hidden;      /* oculta el texto que sobra */
+    text-overflow: ellipsis; /* muestra ... */
+}
 
 
 
