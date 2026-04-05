@@ -33,6 +33,7 @@ const reviewController = require('../controller/reviewController');
 const authController = require('../controller/auth_controller');
 const { isAdmin } = require('../middleware/auth');
 
+
 // rutas del cliente
 //=======================API USERS====================
 route.post('/api/users', userController.create);
@@ -84,6 +85,7 @@ route.delete('/api/proveedores/:id', providerController.delete);
 route.post('/api/ventas', saleController.create);
 route.get('/api/ventas', saleController.find);
 route.delete('/api/ventas/:id', saleController.delete);
+
 
 
 //========================API ROLES=================

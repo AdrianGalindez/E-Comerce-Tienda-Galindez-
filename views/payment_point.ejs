@@ -131,6 +131,47 @@
     </div>
 </div>
 
+<script>
+
+document.getElementById("payNowBtn").addEventListener("click", async () => {
+
+    try {
+
+        const response = await fetch("/api/ventas", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                cliente: "<%= user._id %>",
+                productos: <%- JSON.stringify(cartItems) %>
+            })
+        });
+
+        const data = await response.json();
+
+        if(response.ok){
+
+            alert("Compra realizada correctamente");
+
+            window.location.href = "/checkout/confirmacion/" + data.venta._id;
+
+        }else{
+
+            alert(data.message);
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+        alert("Error procesando pago");
+
+    }
+
+});
+
+</script>
 
 <!-- include footer -->
 <%- include('include/_footer') %>

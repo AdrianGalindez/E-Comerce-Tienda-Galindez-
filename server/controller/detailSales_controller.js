@@ -1,50 +1,101 @@
-var SaleDetaildb = require('../model/SaleDetail');
+const SaleDetaildb = require('../model/saleDetails');
 
-// =======================
+console.log("detailSales controller loaded");
 // CREATE
-// =======================
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
 
-    const detail = new SaleDetaildb({
-        venta: req.body.venta,
-        producto: req.body.producto,
-        cantidad: req.body.cantidad,
-        precioUnitario: req.body.precioUnitario
-    });
+    try {
 
-    detail.save()
-        .then(data => res.send(data))
-        .catch(err => res.status(500).send(err));
+        const subtotal = req.body.cantidad * req.body.precioUnitario
+
+        const detail = new SaleDetaildb({
+            venta: req.body.venta,
+            producto: req.body.producto,
+            cantidad: req.body.cantidad,
+            precioUnitario: req.body.precioUnitario,
+            subtotal: subtotal
+        });
+
+        const data = await detail.save()
+
+        res.send(data)
+
+    } catch (error) {
+
+        res.status(500).send(error)
+
+    }
 }
 
 
-// =======================
 // FIND
-// =======================
-exports.find = (req, res) => {
+exports.find = async (req, res) => {
 
-    SaleDetaildb.find()
-        .populate('venta')
-        .populate('producto')
-        .then(data => res.send(data))
-        .catch(err => res.status(500).send(err));
+    try {
+
+        const ventaId = req.query.venta
+
+        const data = await SaleDetaildb.find({ venta: ventaId })
+            .populate('producto')
+            .populate('venta')
+
+        res.send(data)
+
+    } catch (error) {
+
+        res.status(500).send(error)
+
+    }
 }
 
 
 // UPDATE
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
 
-    SaleDetaildb.findByIdAndUpdate(req.params.id, req.body)
-        .then(data => res.send(data))
-        .catch(err => res.status(500).send(err));
+    try {
+
+        const subtotal = req.body.cantidad * req.body.precioUnitario
+
+        const data = await SaleDetaildb.findByIdAndUpdate(
+            req.params.id,
+            {
+                ...req.body,
+                subtotal: subtotal
+            },
+            { new: true }
+        )
+
+        res.send(data)
+
+    } catch (error) {
+
+        res.status(500).send(error)
+
+    }
 }
 
 
 // DELETE
 
-exports.delete = (req, res) => {
+exports.delete = async (req, res) => {
 
-    SaleDetaildb.findByIdAndDelete(req.params.id)
-        .then(data => res.send({ message: "Detalle de venta eliminado" }))
-        .catch(err => res.status(500).send(err));
+    try {
+
+        const data = await SaleDetaildb.findByIdAndDelete(req.params.id)
+
+        if (!data) {
+            return res.status(404).send({
+                message: "Detalle no encontrado"
+            })
+        }
+
+        res.send({
+            message: "Detalle de venta eliminado"
+        })
+
+    } catch (error) {
+
+        res.status(500).send(error)
+
+    }
 }

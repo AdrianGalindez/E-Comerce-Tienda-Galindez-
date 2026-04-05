@@ -1,5 +1,5 @@
 const Salesdb = require('../model/sales');
-const SaleDetaildb = require('../model/SaleDetail');
+const SaleDetaildb = require('../model/saleDetails');
 const Productdb = require('../model/product');
 const Cartdb = require('../model/cart');
 
