@@ -1,4 +1,4 @@
-# <img width="500" height="500" alt="image" src="https://github.com/user-attachments/assets/9cba90c7-2aa1-44d2-b200-99a0830156b2" />
+# <img width="100" height="100" alt="image" src="https://github.com/user-attachments/assets/9cba90c7-2aa1-44d2-b200-99a0830156b2" />
 🛒 Tienda Galindez  
 
 > 🌟 Donde comprar es una experiencia feliz  
