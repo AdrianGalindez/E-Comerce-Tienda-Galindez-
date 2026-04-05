@@ -92,28 +92,50 @@
                 <i class="fas fa-bag-shopping"></i>
                 <span>Tu pedido</span>
             </div>
+
             <div class="order-items-list">
+                
+                <% cart.items.forEach(item => { %>
+                
                 <div class="order-item">
-                    <div class="item-icon"><i class="fas fa-headphones"></i></div>
-                    <div class="item-details">
-                        <div class="item-title"> Arroba de Arroz Florecita</div>
-                        <div class="item-price">45.000 $</div>
-                        <div class="item-quantity">Cantidad: 1</div>
+                
+                    <div class="item-icon">
+                        <i class="fas fa-box"></i>
                     </div>
-                    <div class="item-line-price">45.000 $</div>
-                </div>
-                <div class="order-item">
-                    <div class="item-icon"><i class="fas fa-clock"></i></div>
+                
                     <div class="item-details">
-                        <div class="item-title">Bulto de Azucar Morena</div>
-                        <div class="item-price">89.990 $</div>
-                        <div class="item-quantity">Cantidad: 1</div>
+                
+                        <div class="item-title">
+                            <%= item.product.nombre %>
+                        </div>
+                
+                        <div class="item-price">
+                            <%= item.product.precio %> $
+                        </div>
+                
+                        <div class="item-quantity">
+                            Cantidad: <%= item.quantity %>
+                        </div>
+                
                     </div>
-                    <div class="item-line-price">89.990 $</div>
+                
+                    <div class="item-line-price">
+                        <%= item.product.precio * item.quantity %> $
+                    </div>
+                
                 </div>
+                
+                <% }) %>
+                
             </div>
+
             <div class="divider"></div>
-            <div class="summary-line"><span>Subtotal</span><span>$149.98</span></div>
+
+            <div class="summary-line">
+               <span>Subtotal</span>
+               <span id="totalAmount"><%= cart.total %> $</span>
+            </div>
+
             <div class="summary-line"><span>Envío</span><span>$4.99</span></div>
             <div class="summary-line"><span>Impuestos (estimado)</span><span>$12.00</span></div>
             <div class="promo-code">
@@ -121,7 +143,14 @@
                 <button class="btn-outline" id="applyPromoBtn">Aplicar</button>
             </div>
             <div class="summary-line total"><span>Total a pagar</span><span id="totalAmount">$166.97</span></div>
-            <button class="pay-btn" id="payNowBtn"><i class="fas fa-lock"></i> Confirmar pago · $166.97</button>
+            
+            <form action="/checkout" method="POST">
+                <input type="hidden" name="cliente" value="<%= user._id %>">
+                <button class="pay-btn">
+                    <i class="fas fa-lock"></i> Confirmar pago · <%= cart.total %> $
+                </button>
+            </form>
+
             <div class="trust-badge" style="justify-content: space-between; margin-top: 18px;">
                 <span><i class="fab fa-cc-visa"></i> Visa</span>
                 <span><i class="fab fa-cc-mastercard"></i> Mastercard</span>
@@ -131,48 +160,8 @@
     </div>
 </div>
 
-<script>
 
-document.getElementById("payNowBtn").addEventListener("click", async () => {
 
-    try {
-
-        const response = await fetch("/api/ventas", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                cliente: "<%= user._id %>",
-                productos: <%- JSON.stringify(cartItems) %>
-            })
-        });
-
-        const data = await response.json();
-
-        if(response.ok){
-
-            alert("Compra realizada correctamente");
-
-            window.location.href = "/checkout/confirmacion/" + data.venta._id;
-
-        }else{
-
-            alert(data.message);
-
-        }
-
-    } catch (error) {
-
-        console.error(error);
-        alert("Error procesando pago");
-
-    }
-
-});
-
-</script>
-
-<!-- include footer -->
+// <!-- include footer -->
 <%- include('include/_footer') %>
-<!-- /include footer -->
+// <!-- /include footer -->
