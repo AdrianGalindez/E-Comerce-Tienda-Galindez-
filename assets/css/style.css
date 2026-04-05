@@ -116,7 +116,14 @@
     text-overflow: ellipsis; /* muestra ... */
 }
 
+.text-sumary{
+color: var(--primary-dark);
+}
 
+.cantidad{
+    margin-left: 27%;
+    margin-right: 27%;
+}
 
 
 
