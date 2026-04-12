@@ -28,11 +28,8 @@ exports.login = async (req, res) => {
         }
 
         // guardar sesión
-        req.session.user = {
-            _id: user._id,
-            nombre: user.nombre,
-            rol: user.rol.nombre
-        };
+        req.session.user = user;    
+        
 
         // redirección
         if (user.rol.nombre === "Admin") {

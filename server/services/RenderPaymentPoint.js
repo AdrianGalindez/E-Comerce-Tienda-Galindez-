@@ -4,11 +4,10 @@ const Cart = require('../model/cart');
 
 exports.payment_point = async (req, res) => {
 
-    const cart = await Cart.findOne({ user: req.session.user._id }).populate('items.product');
-
+    const cart = await Cart.findOne({ usuario: req.session.user._id }).populate('items.producto');
     res.render('payment_point', {
         user: req.session.user,
-        cart: cart
+        cart: cart || { items: [] }
     });
 
 }

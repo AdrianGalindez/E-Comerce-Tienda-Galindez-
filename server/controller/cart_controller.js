@@ -35,7 +35,7 @@ exports.checkout = async (req, res) => {
 
             const subtotal = productoDB.precio * item.cantidad;
             total += subtotal;
-
+            
             detalles.push({
                 producto: productoDB._id,
                 cantidad: item.cantidad,
@@ -103,7 +103,7 @@ exports.add_to_carrito = async (req, res) => {
 
         const userId = req.session.user?._id;
         const { productoId, cantidad } = req.body;
-
+        console.log("BODY:", req.body);
         if (!userId) {
             return res.redirect('/login');
         }
@@ -142,7 +142,8 @@ exports.add_to_carrito = async (req, res) => {
         }
 
         cart.total = cart.items.reduce((acc, i) => acc + i.subtotal, 0);
-
+        console.log("ITEMS:", cart.items);
+        console.log("TOTAL:", cart.total);
         await cart.save();
 
         res.redirect('/carrito');
@@ -151,6 +152,7 @@ exports.add_to_carrito = async (req, res) => {
         console.error(err);
         res.status(500).send(err.message);
     }
+
 };
 
 // ======================= VER CARRITO =======================
@@ -234,6 +236,37 @@ exports.update_carrito = async (req, res) => {
         await cart.save();
 
         res.redirect('/carrito');
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err.message);
+    }
+
+};
+
+
+
+
+
+// ======================= MOSTRAR CHECKOUT =======================
+exports.payment_point = async (req, res) => {
+    try {
+        const userId = req.session.user?._id;
+
+        if (!userId) {
+            return res.redirect('/login');
+        }
+
+        const cart = await Cartdb
+            .findOne({ usuario: userId })
+            .populate('items.producto');
+
+        console.log("CART EN CHECKOUT:", cart);
+
+        res.render('payment_point', {
+            user: req.session.user,
+            cart: cart || { items: [], total: 0 }
+        });
 
     } catch (err) {
         console.error(err);
