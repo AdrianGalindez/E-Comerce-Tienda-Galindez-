@@ -4,12 +4,14 @@ var schema = new mongoose.Schema({
 
     venta: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'saledb'
+        ref: 'saledb',
+        required: true
     },
 
     producto: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'productdb'
+        ref: 'productdb',
+        required: true
     },
 
     cantidad: {

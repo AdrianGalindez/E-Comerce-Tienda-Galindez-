@@ -4,12 +4,11 @@ exports.isAdmin = (req, res, next) => {
         return res.redirect('/login');
     }
 
-    if (req.session.user.rol !== "Admin") {
+    if (req.session.user.rol.nombre !== "Admin") {
         return res.status(403).send("Acceso denegado");
     }
 
     next();
-
 };
 
 

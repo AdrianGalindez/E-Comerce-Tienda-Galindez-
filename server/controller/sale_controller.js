@@ -30,7 +30,6 @@ exports.create = async (req, res) => {
             }
 
             const subtotal = productoDB.precio * item.cantidad;
-
             total += subtotal;
 
             detalles.push({
@@ -52,6 +51,13 @@ exports.create = async (req, res) => {
         });
 
         const ventaGuardada = await venta.save();
+
+        // 🛡️ VALIDACIÓN NUEVA (EVITA TU ERROR ACTUAL)
+        if (!ventaGuardada || !ventaGuardada._id) {
+            return res.status(500).send({
+                message: "Error: la venta no se pudo crear correctamente"
+            });
+        }
 
         // Guardar detalles
         for (let d of detalles) {
@@ -109,11 +115,19 @@ exports.find = async (req, res) => {
 };
 
 
+
 exports.delete = async (req, res) => {
 
     try {
 
         const id = req.params.id;
+
+        // 🛡️ VALIDACIÓN NUEVA
+        if (!id) {
+            return res.status(400).send({
+                message: "ID de venta no proporcionado"
+            });
+        }
 
         const venta = await Saledb.findById(id);
 

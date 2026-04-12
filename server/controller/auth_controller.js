@@ -121,7 +121,9 @@ exports.register = async (req, res) => {
         req.session.user = {
             _id: nuevoUsuario._id,
             nombre: nuevoUsuario.nombre,
-            rol: "Cliente"
+            rol: {
+                nombre: "Cliente"
+            }
         };
 
         res.redirect('/');

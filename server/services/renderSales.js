@@ -25,33 +25,38 @@ exports.sales = (req, res) => {
 };
 
 
-exports.update_sale = (req, res) => {
-    axios.get('http://localhost:3000/api/ventas', { params: { id: req.query.id }})
-        .then(response => {
-            res.render('update_sale', { sale: response.data });
-        })
-        .catch(err => res.send(err));
+exports.update_sale = async (req, res) => {
+    try {
+        const response = await axios.get(
+            `http://localhost:3000/api/ventas/${req.query.id}`
+        );
+
+        res.render('update_sale', { sale: response.data });
+
+    } catch (err) {
+        res.send(err.message);
+    }
 };
 
 
 // ================= DETALLE VENTAS ======================
 exports.create_sale_detail_form = (req, res) => {
-    // Traemos ventas y productos para el detalle
     Promise.all([
         axios.get('http://localhost:3000/api/ventas'),
         axios.get('http://localhost:3000/api/productos')
     ])
     .then(([ventasRes, productosRes]) => {
-        console.log("VENTAS:", req.body);
-        console.log("PRODUCTOS:", req.body);
-        res.render('create_detalleVenta', { 
-            ventas: ventasRes.data, 
-            productos: productosRes.data 
+
+        console.log("VENTAS:", ventasRes.data);
+        console.log("PRODUCTOS:", productosRes.data);
+
+        res.render('create_detalleVenta', {
+            ventas: ventasRes.data,
+            productos: productosRes.data
         });
     })
-    .catch(err => res.send(err));
+    .catch(err => res.send(err.message));
 };
-
 
 exports.read_sale_details = (req, res) => {
     axios.get('http://localhost:3000/api/detalle-ventas')

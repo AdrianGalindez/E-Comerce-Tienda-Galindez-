@@ -1,16 +1,15 @@
-const axios = require('axios');
+exports.payment_point = (req, res) => {
 
-const Cart = require('../model/cart');
+    const cart = req.session.cart || {
+        items: [],
+        total: 0
+    };
 
-exports.payment_point = async (req, res) => {
-
-    const cart = await Cart.findOne({ usuario: req.session.user._id }).populate('items.producto');
     res.render('payment_point', {
         user: req.session.user,
-        cart: cart || { items: [] }
+        cart
     });
-
-}
+};
 
 exports.billing_point = (req, res) => {
     res.render('Billing_point', {

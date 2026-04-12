@@ -1,54 +1,77 @@
 const Salesdb = require('../model/sales');
 const SaleDetaildb = require('../model/saleDetails');
 const Productdb = require('../model/product');
-const Cartdb = require('../model/cart');
 
+
+
+function getCart(req) {
+    if (!req.session.cart) {
+        req.session.cart = {
+            items: [],
+            total: 0
+        };
+    }
+
+    // seguridad básica
+    if (!Array.isArray(req.session.cart.items)) {
+        req.session.cart.items = [];
+    }
+
+    if (typeof req.session.cart.total !== "number") {
+        req.session.cart.total = 0;
+    }
+
+    return req.session.cart;
+}
 // ======================= CHECKOUT =======================
 exports.checkout = async (req, res) => {
     try {
 
         const userId = req.session.user?._id;
 
-        if (!userId) {
-            return res.redirect('/login');
-        }
+        if (!userId) return res.redirect('/login');
 
-        const cart = await Cartdb
-            .findOne({ usuario: userId })
-            .populate('items.producto');
+        const cart = req.session.cart;
 
-        if (!cart || cart.items.length === 0) {
-            return res.status(400).send("El carrito está vacío");
+        if (!cart?.items?.length) {
+            return res.status(400).send("Carrito vacío");
         }
 
         let total = 0;
         const detalles = [];
 
-        for (let item of cart.items) {
+        for (const item of cart.items) {
 
-            const productoDB = item.producto;
+            if (!item.productoId) {
+                return res.status(400).send("Producto inválido en carrito");
+            }
 
-            // 🔥 VALIDAR STOCK (IMPORTANTE)
-            if (productoDB.stock < item.cantidad) {
+            const productoDB = await Productdb.findById(item.productoId);
+
+            if (!productoDB) {
+                return res.status(404).send("Producto no encontrado");
+            }
+
+            const cantidad = Number(item.cantidad);
+
+            if (productoDB.stock < cantidad) {
                 return res.status(400).send(`Stock insuficiente para ${productoDB.nombre}`);
             }
 
-            const subtotal = productoDB.precio * item.cantidad;
+            const subtotal = productoDB.precio * cantidad;
             total += subtotal;
-            
+
             detalles.push({
                 producto: productoDB._id,
-                cantidad: item.cantidad,
+                cantidad,
                 precioUnitario: productoDB.precio,
                 subtotal
             });
 
-            // actualizar stock
-            productoDB.stock -= item.cantidad;
+            productoDB.stock -= cantidad;
             await productoDB.save();
         }
 
-        // Crear venta
         const venta = new Salesdb({
             cliente: userId,
             total
@@ -56,39 +79,44 @@ exports.checkout = async (req, res) => {
 
         const ventaGuardada = await venta.save();
 
-        // Crear detalles
-        for (let d of detalles) {
-            await new SaleDetaildb({
-                venta: ventaGuardada._id,
-                ...d
-            }).save();
+        if (!ventaGuardada?._id) {
+            return res.status(500).send("No se pudo crear la venta");
         }
 
-        // Vaciar carrito
-        cart.items = [];
-        cart.total = 0;
-        await cart.save();
+        for (const d of detalles) {
+            await SaleDetaildb.create({
+                venta: ventaGuardada._id,
+                ...d
+            });
+        }
 
-        res.redirect(`/checkout/confirmacion/${ventaGuardada._id}`);
+        req.session.cart = { items: [], total: 0 };
+
+        return res.redirect(`/checkout/confirmacion/${ventaGuardada._id}`);
 
     } catch (err) {
-        console.error(err);
-        res.status(500).send(err.message);
+        console.error("CHECKOUT ERROR:", err);
+        return res.status(500).send(err.message);
     }
 };
 
 // ======================= CONFIRMACIÓN =======================
 exports.confirmacion = async (req, res) => {
     try {
+
         const ventaId = req.params.id;
 
-        const venta = await Salesdb
-            .findById(ventaId)
-            .populate('cliente');
+        if (!ventaId) {
+            return res.status(400).send("ID de venta inválido");
+        }
 
-        const detalles = await SaleDetaildb
-            .find({ venta: ventaId })
-            .populate('producto');
+        const venta = await Salesdb.findById(ventaId).populate('cliente');
+
+        if (!venta) {
+            return res.status(404).send("Venta no encontrada");
+        }
+
+        const detalles = await SaleDetaildb.find({ venta: ventaId }).populate('producto');
 
         res.render('checkout_confirmacion', { venta, detalles });
 
@@ -103,48 +131,38 @@ exports.add_to_carrito = async (req, res) => {
 
         const userId = req.session.user?._id;
         const { productoId, cantidad } = req.body;
-        console.log("BODY:", req.body);
-        if (!userId) {
-            return res.redirect('/login');
-        }
+
+        if (!userId) return res.redirect('/login');
 
         const producto = await Productdb.findById(productoId);
         if (!producto) {
             return res.status(404).send("Producto no encontrado");
         }
 
-        let cart = await Cartdb.findOne({ usuario: userId });
-
-        if (!cart) {
-            cart = new Cartdb({
-                usuario: userId,
-                items: [],
-                total: 0
-            });
-        }
-
+        const cart = getCart(req);
         const cant = parseInt(cantidad) || 1;
 
         const item = cart.items.find(
-            i => i.producto.toString() === productoId
+            i => i.productoId === productoId
         );
 
         if (item) {
             item.cantidad += cant;
-            item.subtotal = item.cantidad * producto.precio;
+            item.subtotal = item.cantidad * item.precio;
         } else {
             cart.items.push({
-                producto: productoId,
-                cantidad: cant,
+                productoId: producto._id.toString(),
+                nombre: producto.nombre,
                 precio: producto.precio,
-                subtotal: producto.precio * cant
+                cantidad: cant,
+                subtotal: producto.precio * cant,
+                foto: producto.foto
             });
         }
 
         cart.total = cart.items.reduce((acc, i) => acc + i.subtotal, 0);
-        console.log("ITEMS:", cart.items);
-        console.log("TOTAL:", cart.total);
-        await cart.save();
+
+        req.session.cart = cart;
 
         res.redirect('/carrito');
 
@@ -152,29 +170,20 @@ exports.add_to_carrito = async (req, res) => {
         console.error(err);
         res.status(500).send(err.message);
     }
-
 };
 
 // ======================= VER CARRITO =======================
 exports.car = async (req, res) => {
     try {
 
-        const userId = req.session.user?._id;
-
-        if (!userId) {
-            return res.redirect('/login');
-        }
-
-        const cart = await Cartdb
-            .findOne({ usuario: userId })
-            .populate('items.producto');
-
-        const productos = cart ? cart.items : [];
-        const subtotal = cart ? cart.total : 0;
+        const cart = req.session.cart || {
+            items: [],
+            total: 0
+        };
 
         res.render('car', {
-            productosCarrito: productos,
-            subtotal
+            productosCarrito: cart.items,
+            subtotal: cart.total
         });
 
     } catch (err) {
@@ -184,23 +193,19 @@ exports.car = async (req, res) => {
 };
 
 // ======================= ELIMINAR ITEM =======================
-exports.remove_from_carrito = async (req, res) => {
+exports.remove_from_carrito = (req, res) => {
     try {
 
-        const userId = req.session.user?._id;
         const { productoId } = req.body;
-
-        const cart = await Cartdb.findOne({ usuario: userId });
-
-        if (!cart) return res.redirect('/carrito');
+        const cart = getCart(req);
 
         cart.items = cart.items.filter(
-            i => i.producto.toString() !== productoId
+            i => i.productoId !== productoId
         );
 
         cart.total = cart.items.reduce((acc, i) => acc + i.subtotal, 0);
 
-        await cart.save();
+        req.session.cart = cart;
 
         res.redirect('/carrito');
 
@@ -214,26 +219,21 @@ exports.remove_from_carrito = async (req, res) => {
 exports.update_carrito = async (req, res) => {
     try {
 
-        const userId = req.session.user?._id;
         const { productoId, cantidad } = req.body;
+        const cart = getCart(req);
 
-        const cart = await Cartdb.findOne({ usuario: userId });
-
-        if (!cart) return res.redirect('/carrito');
-
-        const item = cart.items.find(
-            i => i.producto.toString() === productoId
-        );
+        const item = cart.items.find(i => i.productoId === productoId);
 
         if (item) {
-            const cant = Math.max(1, parseInt(cantidad)); // 🔥 evita 0 o negativos
+            const cant = Math.max(1, parseInt(cantidad));
             item.cantidad = cant;
-            item.subtotal = item.cantidad * item.precio;
+            const producto = await Productdb.findById(item.productoId);
+            item.subtotal = producto.precio * cant;
         }
 
         cart.total = cart.items.reduce((acc, i) => acc + i.subtotal, 0);
 
-        await cart.save();
+        req.session.cart = cart;
 
         res.redirect('/carrito');
 
@@ -241,7 +241,6 @@ exports.update_carrito = async (req, res) => {
         console.error(err);
         res.status(500).send(err.message);
     }
-
 };
 
 
@@ -257,10 +256,11 @@ exports.payment_point = async (req, res) => {
             return res.redirect('/login');
         }
 
-        const cart = await Cartdb
-            .findOne({ usuario: userId })
-            .populate('items.producto');
-
+        const cart = req.session.cart;
+        
+        if (!cart || cart.items.length === 0) {
+            return res.status(400).send("El carrito está vacío");
+        }
         console.log("CART EN CHECKOUT:", cart);
 
         res.render('payment_point', {
