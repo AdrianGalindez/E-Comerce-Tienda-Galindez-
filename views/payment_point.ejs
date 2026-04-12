@@ -15,19 +15,43 @@
                 <i class="fas fa-user-pen"></i>
                 <span>Información de facturación</span>
             </div>
-            <div class="input-group">
-                <label>Nombre completo</label>
-                <input type="text" id="fullName" placeholder="Ana Martínez" value="Ana Martínez">
-            </div>
-            <div class="input-row">
-                <div class="input-group"><label>Correo electrónico</label><input type="email" id="email" placeholder="cliente@ejemplo.com" value="cliente@tienda.com"></div>
-                <div class="input-group"><label>Teléfono</label><input type="tel" id="phone" placeholder="+57 310 496 6144" value="+57 310 496 6144"></div>
-            </div>
-            <div class="input-group"><label>Dirección</label><input type="text" id="address" placeholder="Calle Principal 123" value="Av. Moderna 456"></div>
-            <div class="input-row">
-                <div class="input-group"><label>Ciudad</label><input type="text" id="city" placeholder="Ciudad" value="Madrid"></div>
-                <div class="input-group"><label>Código postal</label><input type="text" id="zip" placeholder="28001" value="28013"></div>
-            </div>
+                <div class="input-group">
+                    <label>Nombre completo</label>
+                    <input type="text" id="fullName" value="<%= user.nombre %>">
+                </div>
+                
+                <div class="input-row">
+                
+                    <div class="input-group">
+                        <label>Correo electrónico</label>
+                        <input type="email" id="email" value="<%= user.email %>">
+                    </div>
+                
+                    <div class="input-group">
+                        <label>Teléfono</label>
+                        <input type="tel" id="phone" value="<%= user.telefono %>">
+                    </div>
+                
+                </div>
+                
+                <div class="input-group">
+                    <label>Dirección</label>
+                    <input type="text" id="address" value="<%= user.direccion %>">
+                </div>
+                
+                <div class="input-row">
+                
+                    <div class="input-group">
+                        <label>Ciudad</label>
+                        <input type="text" id="city" value="<%= user.ciudad %>">
+                    </div>
+                
+                    <div class="input-group">
+                        <label>Código postal</label>
+                        <input type="text" id="zip" value="">
+                    </div>
+                
+                </div>
 
             <div class="payment-methods">
                 <div class="section-title" style="margin-bottom: 1rem;">
@@ -54,7 +78,7 @@
             <div id="paymentDetailsDynamic" class="payment-details-container">
                 <!-- CREDIT CARD FIELDS (visible por defecto) -->
                 <div id="creditCardFields">
-                    <div class="input-group"><label>Nombre en la tarjeta</label><input type="text" id="cardName" placeholder="Como aparece en la tarjeta" value="ANA MARTINEZ"></div>
+                    <div class="input-group"><label>Nombre en la tarjeta</label><input type="text" id="cardName" placeholder="Como aparece en la tarjeta" value="ADRIAN GALINDEZ"></div>
                     <div class="input-group"><label>Número de tarjeta</label><input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" value="4242 4242 4242 4242"></div>
                     <div class="card-row">
                         <div class="input-group"><label>Fecha expiración</label><input type="text" id="expiry" placeholder="MM/AA" value="12/28"></div>
@@ -93,7 +117,7 @@
                 <span>Tu pedido</span>
             </div>
 
-            <div class="order-items-list">
+            <div class="order-items-list" class="text-sumary">
                 
                 <% cart.items.forEach(item => { %>
                 
@@ -106,21 +130,21 @@
                     <div class="item-details">
                 
                         <div class="item-title">
-                            <%= item.product.nombre %>
+                            <%= item.producto.nombre %>
                         </div>
                 
                         <div class="item-price">
-                            <%= item.product.precio %> $
+                            <%= item.producto.precio %> $
                         </div>
                 
                         <div class="item-quantity">
-                            Cantidad: <%= item.quantity %>
+                            Cantidad: <%= item.cantidad %>
                         </div>
                 
                     </div>
                 
                     <div class="item-line-price">
-                        <%= item.product.precio * item.quantity %> $
+                        <%= item.producto.precio * item.cantidad %> $
                     </div>
                 
                 </div>
@@ -130,24 +154,26 @@
             </div>
 
             <div class="divider"></div>
-
-            <div class="summary-line">
+            <div class="summary-line text-sumary">
                <span>Subtotal</span>
                <span id="totalAmount"><%= cart.total %> $</span>
             </div>
 
-            <div class="summary-line"><span>Envío</span><span>$4.99</span></div>
-            <div class="summary-line"><span>Impuestos (estimado)</span><span>$12.00</span></div>
+            <div class="summary-line text-sumary"><span>Envío</span><span>$5000</span></div>
+            <div class="summary-line text-sumary"><span>Impuestos (estimado)</span><span>$300</span></div>
+            <% let envio = 5000; %>
+            <% let impuestos = 300; %>
+            <% let totalFinal = (cart.total || 0) + envio + impuestos; %>
             <div class="promo-code">
                 <input type="text" id="promoInput" placeholder="Código de descuento">
                 <button class="btn-outline" id="applyPromoBtn">Aplicar</button>
             </div>
-            <div class="summary-line total"><span>Total a pagar</span><span id="totalAmount">$166.97</span></div>
-            
+            <div class="summary-line total text-sumary"><span>Total a pagar</span><span id="totalAmount">$<%= (cart.total || 0).toFixed(2) %></span></div>
+
             <form action="/checkout" method="POST">
                 <input type="hidden" name="cliente" value="<%= user._id %>">
                 <button class="pay-btn">
-                    <i class="fas fa-lock"></i> Confirmar pago · <%= cart.total %> $
+                    <i class="fas fa-lock"></i> Confirmar pago · $<%= totalFinal.toFixed(2) %>
                 </button>
             </form>
 
