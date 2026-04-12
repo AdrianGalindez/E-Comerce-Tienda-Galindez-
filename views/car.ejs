@@ -32,17 +32,17 @@
           <!-- Imagen -->
           <div class="img-container">
             <img 
-              src="<%= producto.producto.foto || '/assets/img/default.jpg' %>" 
-              alt="<%= producto.producto.nombre %>"
+              src="<%= producto.foto || '/assets/img/default.jpg' %>" 
+              alt="<%= producto.nombre %>"
             >
           </div>
 
           <!-- Info producto -->
           <div class="product-info">
-            <h3><%= producto.producto.nombre %></h3>
+            <h3><%= producto.nombre %></h3>
 
             <p class="category">
-              <%= producto.producto.categoria?.nombre || 'Sin categoría' %>
+              <%= producto.categoria?.nombre || 'Sin categoría' %>
             </p>
           </div>
 
@@ -51,7 +51,7 @@
          
            <!-- Disminuir -->
            <form action="/carrito/actualizar" method="POST">
-             <input type="hidden" name="productoId" value="<%= producto.producto._id %>">
+             <input type="hidden" name="productoId" value="<%= producto._id %>">
              <input type="hidden" name="cantidad" value="<%= producto.cantidad - 1 %>">
              <button type="submit">-</button>
            </form>
@@ -61,7 +61,7 @@
          
            <!-- Aumentar -->
            <form action="/carrito/actualizar" method="POST">
-             <input type="hidden" name="productoId" value="<%= producto.producto._id %>">
+             <input type="hidden" name="productoId" value="<%= producto._id %>">
              <input type="hidden" name="cantidad" value="<%= producto.cantidad + 1 %>">
              <button type="submit">+</button>
            </form>
@@ -70,12 +70,12 @@
 
           <!-- Precio -->
           <p class="price">
-            $<%= (producto.producto.precio * producto.cantidad).toFixed(2) %>
+            $<%= (producto.precio * producto.cantidad).toFixed(2) %>
           </p>
 
           <!-- Eliminar producto -->
           <form action="/carrito/eliminar" method="POST">
-            <input type="hidden" name="productoId" value="<%= producto.producto._id %>">
+            <input type="hidden" name="productoId" value="<%= producto._id %>">
             <button class="remove-btn">✕</button>
           </form>
 
