@@ -8,22 +8,32 @@
         </h2>
     </div>
     <div class="container-cards">
+        <% productos.forEach(p => { %>
         <div class="card" style="width: 18rem;">
-            <img src="/img/arroz.jpg" class="card-img-top" alt="...">
+             <img 
+                src="<%= (p.fotos && p.fotos.length > 0) 
+                  ? p.fotos[0] 
+                  : '/assets/img/default.jpg' %>" 
+                class="card-img-top" 
+             alt="...">
             <div class="card-body">
-                <h5 class="card-title">Arroz</h5>
-                <p class="card-text">Arroz de alta calidad, perfecto para tu familia.</p>
+                <h5 class="card-title"><%= p.nombre %></h5>
+                <p class="card-text"><%= p.descripcion %></p>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">2300$ Libra</li>
+                <li class="list-group-item">$ <%= p.precio %></li>
                 <li class="list-group-item">Disponible</li>
-                <li class="list-group-item">Cantidad en Stock: 50</li>
+                <li class="list-group-item">Cantidad en Stock: <%= p.stock %></li>
             </ul>
             <div class="card-body">
-                <a href="#" class="card-link">Ver Detalles</a>
-                <a href="#" class="card-link">Agregar al Carrito</a>
+                <a href="/Detalles/<%= p._id %>" class="card-link">Ver Detalles</a>
+                <form action="/add-to-carrito" method="POST" style="display:inline;">
+                    <input type="hidden" name="productoId" value="<%= p._id %>">
+                    <button type="submit" class="card-link">🛒 Agregar</button>
+                </form>                        
             </div>
         </div>
+        <% }) %>
     </div>
 </main>
 
