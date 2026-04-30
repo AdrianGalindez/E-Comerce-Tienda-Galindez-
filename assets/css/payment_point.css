@@ -332,3 +332,24 @@ input:focus, select:focus {
 button, .method-option {
     cursor: pointer;
 }
+
+
+/* busqueda  */
+.search-results {
+    background: white;
+    border: 1px solid #ddd;
+    max-height: 200px;
+    overflow-y: auto;
+    position: absolute;
+    width: 100%;
+    z-index: 10;
+}
+
+.search-item {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.search-item:hover {
+    background: #f2f2f2;
+}

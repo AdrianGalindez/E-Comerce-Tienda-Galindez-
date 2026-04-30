@@ -1,83 +1,9 @@
-/*============================== carousel ============================*/
-/* .container-carousel {
-    border-bottom: 5px solid var(--warm-tan);
-}
-
-.carousel-caption {
-    background: rgba(49, 27, 20, 0.7); 
-    border-radius: 15px;
-    padding: 20px;
-    border-left: 5px solid var(--accent-orange);
-}
-
-.carousel-caption h5 {
-    color: var(--warm-tan);
-    font-weight: bold;
-}
-
-.container-cards {
-    display: flex;
-    justify-content: center;
-    padding: 40px 0;
-    background-color: var(--light-bg);
-}
-
-.card {
-    border: 1px solid var(--warm-tan);
-    transition: transform 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(49, 27, 20, 0.2);
-}
-
-.card-title {
-    color: var(--primary-dark);
-    font-weight: bold;
-}
-
-.card-link {
-    color: var(--accent-orange);
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.card-link:hover {
-    color: var(--primary-dark);
-}
-
-.thead-dark th {
-    background-color: var(--primary-dark) !important;
-    color: var(--warm-tan) !important;
-}
-
-.text-gradient {
-    color: var(--accent-orange);
-    font-weight: bold;
-}
-
-.container-carousel{
-    max-width: 1200px;
-    margin: auto;
-}
-
-.carousel-item{
-    height: 400px;  
-}
-
-.carousel-item img{
-    height: 100%;
-    width: 100%;
-    object-fit: cover;   
-} */
 
 
 /*============================== carousel ============================*/
-
 .container-carousel {
     border-bottom: 5px solid var(--warm-tan);
-    max-width: 1200px;
+    max-width: 1400px;
     margin: auto;
     transition: transform 0.3s ease;
 }
@@ -89,7 +15,7 @@
 
 /* ITEM DEL CARRUSEL */
 .carousel-item {
-    height: 400px;
+    height: 600px;
     overflow: hidden;
 }
 
@@ -130,7 +56,7 @@
 .container-cards {
     display: flex;
     justify-content: center;
-    padding: 40px 0;
+    padding: 20px 0;
     background-color: var(--light-bg);
     flex-wrap: wrap;
     gap: 20px;
