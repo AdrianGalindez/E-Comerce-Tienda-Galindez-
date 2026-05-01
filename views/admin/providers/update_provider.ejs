@@ -43,6 +43,15 @@
             value="<%= provider.direccion %>"
           >
         </div>
+        
+        <div class="form-group full">
+          <label>Descripción</label>
+          <textarea
+            name="descripcion"
+            rows="3"
+            placeholder="Ej: Proveedor de tecnología"
+          ><%= provider.descripcion || '' %></textarea>
+        </div>
 
       </div>
 

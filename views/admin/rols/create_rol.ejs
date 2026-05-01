@@ -11,17 +11,28 @@
 
     <form action="/create-rol" method="POST" class="role-form">
 
-      <div class="form-group">
-        <label>Nombre del rol</label>
-        <input type="text" name="nombre" placeholder="Ej: Administrador" required autofocus>
-        <small>Define permisos según este rol</small>
-      </div>
+  <div class="form-group">
+    <label>Nombre del rol</label>
+    <input type="text" name="nombre" placeholder="Ej: Administrador" required>
+    <small>Define permisos según este rol</small>
+  </div>
 
-      <div class="form-actions">
-        <button type="submit">Guardar rol</button>
-      </div>
+  <div class="form-group">
+    <label>Descripción</label>
+    <textarea 
+        name="descripcion" 
+        placeholder="Ej: Tiene acceso total al sistema"
+        rows="3"
+        required>
+    </textarea>
+    <small>Explica qué hace este rol</small>
+  </div>
 
-    </form>
+  <div class="form-actions">
+    <button type="submit">Guardar rol</button>
+  </div>
+
+</form>
 
   </div>
 </div>

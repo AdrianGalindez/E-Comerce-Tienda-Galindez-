@@ -15,6 +15,7 @@
         <th scope="col">Nombre</th>
         <th scope="col">Teléfono</th>
         <th scope="col">Dirección</th>
+        <th scope="col">Descripcion</th>
         <th scope="col">Editar</th>
         <th scope="col">Eliminar</th>
       </tr>
@@ -26,7 +27,7 @@
         <td><%= provider.nombre %></td>
         <td><%= provider.telefono %></td>
         <td><%= provider.direccion %></td>
-
+        <td><%= provider.descripcion %></td>
         <td>
           <a href="/update-proveedor?id=<%= provider._id %>" class="btn btn-success">Editar</a>
         </td>
@@ -37,7 +38,7 @@
       </tr>
       <% }); %>
         <tr>
-          <td colspan="4" >
+          <td colspan="6" >
           <a href="/create-proveedor" class="btn btn-primary">Crear Nuevo Proveedor</a>
         </td>
       </tr>
