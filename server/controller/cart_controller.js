@@ -187,7 +187,13 @@ exports.add_to_carrito = async (req, res) => {
         cart.total = cart.items.reduce((acc, i) => acc + i.subtotal, 0);
         req.session.cart = cart;
         req.session.save(); // 👈 IMPORTANTE
-        res.redirect('/carrito');
+        const totalItems = cart.items.reduce((acc, i) => acc + i.cantidad, 0);
+
+        return res.json({ 
+            success: true,
+            totalItems 
+        });
+
     } catch (err) {
         console.error(err);
         res.status(500).send(err.message);

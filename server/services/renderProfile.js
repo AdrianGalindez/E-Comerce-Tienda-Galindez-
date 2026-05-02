@@ -2,8 +2,9 @@ const { getUserProfile } = require('../controller/user_controller');
 
 exports.profile = async (req, res) => {
     try {
-        const userId = req.user?.id || req.session?.user?.id;
-
+        const userId = req.user?.id || req.session?.user?._id;
+        console.log("USER SESSION:", req.session.user);
+        console.log("USER AUTH:", req.user);
         if (!userId) {
             return res.redirect('/login');
         }
