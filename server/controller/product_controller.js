@@ -7,25 +7,42 @@ const fs = require('fs');
 // Crear producto
 exports.create = async (req, res) => {
   try {
-    const { nombre, descripcion, precioCosto, precio, stock, categoria, marca, proveedor } = req.body;
+    const { nombre, descripcion, precioCosto, precioBase, stock, categoria, marca, proveedor,  unidadBase,presentaciones } = req.body;
 
     // Validaciones básicas
-    if (!nombre || !precio || !precioCosto || !stock || !categoria || !marca) {
+    if (!nombre || !precioBase || !precioCosto || !stock || !categoria || !marca || !unidadBase) {
       return res.status(400).send({ message: "Faltan datos obligatorios" });
     }
 
-    if (isNaN(precio) || isNaN(precioCosto) || isNaN(stock)) {
+    if (isNaN(precioBase) || isNaN(precioCosto) || isNaN(stock)) {
       return res.status(400).send({ message: "Precio, costo y stock deben ser números" });
     }
 
-    if (Number(precio) < Number(precioCosto)) {
-      return res.status(400).send({ message: "El precio de venta no puede ser menor al costo" });
+    if (Number(precioBase) < Number(precioCosto)) {
+      return res.status(400).send({ message: "El precio base no puede ser menor al costo" });
     }
 
     // Validación de ObjectId
     if (!mongoose.Types.ObjectId.isValid(categoria)) return res.status(400).send({ message: "ID de categoría inválido" });
     if (!mongoose.Types.ObjectId.isValid(marca)) return res.status(400).send({ message: "ID de marca inválido" });
     if (proveedor && !mongoose.Types.ObjectId.isValid(proveedor)) return res.status(400).send({ message: "ID de proveedor inválido" });
+
+    if (presentaciones) {
+      const parsed = typeof presentaciones === 'string'
+        ? JSON.parse(presentaciones)
+        : presentaciones;
+    
+      for (let p of parsed) {
+        if (!p.unidad || !mongoose.Types.ObjectId.isValid(p.unidad)) {
+          return res.status(400).send({ message: "Unidad inválida en presentaciones" });
+        }
+    
+        if (isNaN(p.precio)) {
+          return res.status(400).send({ message: "Precio inválido en presentaciones" });
+        }
+      }
+    }
+
 
     // Imagen
     const rutasImagenes = req.files
@@ -37,11 +54,13 @@ exports.create = async (req, res) => {
       nombre,
       descripcion: descripcion || "",
       precioCosto: Number(precioCosto),
-      precio: Number(precio),
+      precioBase: Number(precioBase),
       stock: Number(stock),
       categoria,
       marca,
       proveedor: proveedor || null,
+      unidadBase,
+      presentaciones: presentaciones ? JSON.parse(presentaciones) : [],
       fotos: rutasImagenes
     });
 
@@ -55,8 +74,8 @@ exports.create = async (req, res) => {
 
 
 // find
-exports.find = (req,res)=>{
-    if(req.query.id){
+exports.find = (req, res) => {
+    if (req.query.id) {
         Productdb.findById(req.query.id)
             .populate('marca')
             .populate('categoria')
@@ -64,18 +83,23 @@ exports.find = (req,res)=>{
                 path: 'proveedor',
                 match: { _id: { $exists: true } }
             })
-            .then(data => res.send(data))
+            .populate('unidadBase') // ✅ OK
+            .populate('presentaciones.unidad') // ✅ OK
+            .then(data => res.send(data)) // 🔥 FALTABA ESTO
             .catch(err => {
                 console.error("ERROR EN FIND:", err);
                 res.status(500).send(err);
-            })
-    }else{
+            });
+
+    } else {
         Productdb.find()
             .populate('marca')
             .populate('categoria')
             .populate('proveedor')
+            .populate('unidadBase') 
+            .populate('presentaciones.unidad')
             .then(data => res.send(data))
-            .catch(err => res.status(500).send(err))
+            .catch(err => res.status(500).send(err));
     }
 }
 
@@ -89,21 +113,41 @@ exports.update = async (req, res) => {
             return res.status(404).send({ message: "Producto no encontrado" });
         }
 
-        const nuevoPrecio = req.body.precio ? Number(req.body.precio) : product.precio;
-        const nuevoCosto = req.body.precioCosto ? Number(req.body.precioCosto) : product.precioCosto;
+        const nuevoPrecioBase = req.body.precioBase 
+            ? Number(req.body.precioBase) 
+            : product.precioBase;
 
-        if (nuevoPrecio < nuevoCosto) {
+        const nuevoCosto = req.body.precioCosto 
+            ? Number(req.body.precioCosto) 
+            : product.precioCosto;
+
+        if (nuevoPrecioBase < nuevoCosto) {
             return res.status(400).send({
-                message: "El precio no puede ser menor al costo"
+                message: "El precio base no puede ser menor al costo"
             });
         }
-        // MANEJO DE IMÁGENES
+
+        const nuevaUnidadBase = req.body.unidadBase || product.unidadBase;
+
+        let nuevasPresentaciones = product.presentaciones;
+
+        if (req.body.presentaciones) {
+            nuevasPresentaciones = typeof req.body.presentaciones === 'string'
+                ? JSON.parse(req.body.presentaciones)
+                : req.body.presentaciones;
+        }
+
+        if (req.body.unidadBase && !mongoose.Types.ObjectId.isValid(req.body.unidadBase)) {
+            return res.status(400).send({ message: "ID de unidad inválido" });
+        }
+
         let fotosActuales = [...product.fotos];
-        // 1. ELIMINAR IMÁGENES
+
         if (req.body.eliminarFotos) {
             const eliminar = Array.isArray(req.body.eliminarFotos)
                 ? req.body.eliminarFotos
                 : [req.body.eliminarFotos];
+
             eliminar.forEach(foto => {
                 const ruta = path.join(__dirname, '../public', foto);
                 if (fs.existsSync(ruta)) {
@@ -114,7 +158,6 @@ exports.update = async (req, res) => {
             fotosActuales = fotosActuales.filter(f => !eliminar.includes(f));
         }
 
-        // 2. REEMPLAZAR IMÁGENES INDIVIDUALES
         if (req.files) {
             Object.keys(req.files).forEach(key => {
                 if (key.startsWith('foto_')) {
@@ -128,28 +171,27 @@ exports.update = async (req, res) => {
             });
         }
 
-        // 3. AGREGAR NUEVAS IMÁGENES
         if (req.files && req.files.nuevasFotos) {
             const nuevas = req.files.nuevasFotos.map(f => `/assets/img/${f.filename}`);
             fotosActuales = [...fotosActuales, ...nuevas];
         }
 
-        // 4. LIMPIAR (PRO)
-        fotosActuales = [...new Set(fotosActuales)]; // sin duplicados
-        fotosActuales = fotosActuales.slice(0, 4);   // máximo 4
+        fotosActuales = [...new Set(fotosActuales)];
+        fotosActuales = fotosActuales.slice(0, 4);
 
-        // UPDATE FINAL
         const updated = await Productdb.findByIdAndUpdate(
             req.params.id,
             {
                 nombre: req.body.nombre || product.nombre,
                 descripcion: req.body.descripcion || product.descripcion,
                 precioCosto: nuevoCosto,
-                precio: nuevoPrecio,
+                precioBase: nuevoPrecioBase,
                 stock: req.body.stock !== undefined ? Number(req.body.stock) : product.stock,
                 categoria: req.body.categoria || product.categoria,
                 marca: req.body.marca || product.marca,
                 proveedor: req.body.proveedor || product.proveedor,
+                unidadBase: nuevaUnidadBase,
+                presentaciones: nuevasPresentaciones,
                 fotos: fotosActuales
             },
             { new: true }
@@ -196,10 +238,11 @@ exports.searchApi = async (req, res) => {
         // 🔥 QUERY OPTIMIZADO
         const productos = await Productdb.find({
             nombre: { $regex: search, $options: 'i' },
-            stock: { $gt: 0 } // 👈 solo productos disponibles
+            stock: { $gt: 0 }
         })
-        .select('nombre precio stock') // 👈 SOLO lo necesario
-        .limit(10) // 👈 CLAVE PARA PERFORMANCE
+        .select('nombre precioBase stock unidadBase') // 👈 agregas unidadBase
+        .populate('unidadBase') // 👈 aquí
+        .limit(10)
         .lean();
 
         res.send(productos);
@@ -316,7 +359,7 @@ exports.getTopMarginProducts = async () => {
 
         return productos
             .map(p => {
-                const margen = p.precio - p.precioCosto;
+                const margen = p.precioBase - p.precioCosto;
 
                 return {
                     name: p.nombre,

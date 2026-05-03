@@ -33,7 +33,7 @@ exports.create_category = (req, res) => {
     axios.post('http://localhost:3000/api/categorias', req.body)
         .then(response => {
             console.log("BODY EN SERVICES:", req.body);
-            res.redirect('create-categoria');
+            res.redirect('/create-categoria');
         })
         .catch(err => {
             console.log(err);
@@ -69,7 +69,7 @@ exports.update_category = (req, res) => {
 exports.delete_category = (req, res) => {
     axios.delete(`http://localhost:3000/api/categorias/${req.params.id}`)
         .then(response => {
-            res.redirect('/admin/categories/read-categoria');
+            res.redirect('/read-categoria');
         })
         .catch(err => res.send(err));
 };
@@ -79,7 +79,7 @@ exports.update_category_data = (req, res) => {
     axios.put(`http://localhost:3000/api/categorias/${req.params.id}`, req.body)
 
         .then(response => {
-            res.redirect('/admin/categories/read-categoria');
+            res.redirect('/read-categoria');
         })
 
         .catch(err => res.send(err));

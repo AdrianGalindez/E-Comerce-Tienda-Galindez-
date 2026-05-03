@@ -40,21 +40,34 @@ exports.create_product = (req, res) => {
 
 // Mostrar formulario de creación de producto
 exports.create_product_form = (req, res) => {
-    // Traemos marcas, categorías y proveedores para los selects del formulario
+
     Promise.all([
         axios.get('http://localhost:3000/api/marcas'),
         axios.get('http://localhost:3000/api/categorias'),
-        axios.get('http://localhost:3000/api/proveedores')
+        axios.get('http://localhost:3000/api/proveedores'),
+        axios.get('http://localhost:3000/api/unidades') // 🔥 IMPORTANTE
     ])
-    .then(([marcasRes, categoriasRes, proveedoresRes]) => {
-        console.log("PRODUCTO:", req.body);
+    .then(([marcasRes, categoriasRes, proveedoresRes, unidadesRes]) => {
+
         res.render('admin/products/create_producto', { 
             marcas: marcasRes.data,
             categorias: categoriasRes.data,
-            proveedores: proveedoresRes.data
+            proveedores: proveedoresRes.data,
+            unidades: unidadesRes.data || [] // 🔥 ESTO SOLUCIONA TODO
         });
+
     })
-    .catch(err => res.send(err));
+    .catch(err => {
+        console.error("ERROR CREATE PRODUCT FORM:", err);
+
+        // 🔥 fallback para que NO rompa la vista
+        res.render('admin/products/create_producto', { 
+            marcas: [],
+            categorias: [],
+            proveedores: [],
+            unidades: [] 
+        });
+    });
 };
 
 
@@ -68,36 +81,77 @@ exports.read_products = (req, res) => {
 };
 
 
+// exports.update_products = async (req, res) => {
+//     try {
+
+//         const id = req.params.id;
+
+//         const response = await axios.get('http://localhost:3000/api/productos', {
+//             params: { id }
+//         });
+
+//         const producto = response.data;
+
+//         const [marcasRes, categoriasRes, proveedoresRes, unidadesRes] = await Promise.all([
+//             axios.get('http://localhost:3000/api/marcas'),
+//             axios.get('http://localhost:3000/api/categorias'),
+//             axios.get('http://localhost:3000/api/proveedores'),
+//             axios.get('http://localhost:3000/api/unidades') // 🔥 NUEVO
+//         ]);
+
+//         res.render('admin/products/update_products', {
+//             producto,
+//             marcas: marcasRes.data,
+//             categorias: categoriasRes.data,
+//             proveedores: proveedoresRes.data,
+//             unidades: unidadesRes.data // 🔥 NUEVO
+//         });
+
+//     } catch (err) {
+//         console.error("ERROR UPDATE PRODUCT:", err);
+//         res.status(500).send(err.message);
+//     }
+// };
+
 exports.update_products = async (req, res) => {
     try {
 
-        const id = req.query.id;
+        const id = req.params.id; // ✅ VIENE DE LA URL
+
+        if (!id) {
+            return res.status(400).send("ID no proporcionado");
+        }
 
         const response = await axios.get('http://localhost:3000/api/productos', {
-            params: { id }
+            params: { id } // ✅ SE ENVÍA COMO QUERY A LA API
         });
 
         const producto = response.data;
 
-        const [marcasRes, categoriasRes, proveedoresRes] = await Promise.all([
+        if (!producto) {
+            return res.status(404).send("Producto no encontrado");
+        }
+
+        const [marcasRes, categoriasRes, proveedoresRes, unidadesRes] = await Promise.all([
             axios.get('http://localhost:3000/api/marcas'),
             axios.get('http://localhost:3000/api/categorias'),
-            axios.get('http://localhost:3000/api/proveedores')
+            axios.get('http://localhost:3000/api/proveedores'),
+            axios.get('http://localhost:3000/api/unidades')
         ]);
 
         res.render('admin/products/update_products', {
             producto,
             marcas: marcasRes.data,
             categorias: categoriasRes.data,
-            proveedores: proveedoresRes.data
+            proveedores: proveedoresRes.data,
+            unidades: unidadesRes.data || []
         });
 
     } catch (err) {
-        console.error("ERROR UPDATE PRODUCT:", err);
+        console.error("ERROR UPDATE PRODUCT:", err.response?.data || err.message);
         res.status(500).send(err.message);
     }
 };
-
 
 exports.delete_product = (req, res) => {
     axios.delete(`http://localhost:3000/api/productos/${req.params.id}`)
